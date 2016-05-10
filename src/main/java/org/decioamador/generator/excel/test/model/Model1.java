@@ -5,15 +5,15 @@ import java.util.Date;
 public class Model1 {
 
 	private String guid;
-	private Date createdAt;
+	private Date date;
 	private Long id;
 	private String name;
 	private Model2 model2;
 	
-	public Model1(String guid, Long id, Date createdAt, String name, Model2 model2){
+	public Model1(String guid, Long id, Date date, String name, Model2 model2){
 		this.guid = guid;
 		this.id = id;
-		this.createdAt = createdAt;
+		this.date = date;
 		this.name = name;
 		this.model2 = model2;
 	}
@@ -24,12 +24,13 @@ public class Model1 {
 	public void setGuid(String guid) {
 		this.guid = guid;
 	}
-	public Date getCreatedAt() {
-		return createdAt;
+	public Date getDate() {
+		return date;
 	}
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public void setDate(Date date) {
+		this.date = date;
 	}
+
 	public Long getId() {
 		return id;
 	}

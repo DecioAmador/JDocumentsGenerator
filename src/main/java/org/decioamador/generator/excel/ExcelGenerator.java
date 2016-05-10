@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -33,7 +35,7 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 	private int initialPosition = 0;
 	private Boolean autosize = false;
 	private String dateFormat = "yyyy-MM-dd hh:mm:ss";
-	private DateFormat sdf = new SimpleDateFormat(dateFormat); 
+	private DateFormat sdf; 
 	
 	private HSSFWorkbook wb;
 	private HSSFSheet ws;
@@ -44,11 +46,12 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 	}
 
 	public ExcelGenerator() {
-		// Nothing to do here
+		sdf = new SimpleDateFormat(dateFormat);
 	}
 	
 	public ExcelGenerator(Map<ExcelOptionId,Object> options) {
 		resolveOptions(options);
+		sdf = new SimpleDateFormat(dateFormat);
 	}
 	
 	private void resolveOptions(Map<ExcelOptionId,Object> options){

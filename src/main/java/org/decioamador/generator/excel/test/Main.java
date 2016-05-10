@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.decioamador.generator.excel.ExcelGenerator;
+import org.decioamador.generator.excel.model.ExcelOptionId;
 import org.decioamador.generator.excel.test.model.Model1;
 import org.decioamador.generator.excel.test.model.Model2;
 import org.decioamador.generator.excel.test.model.Model3;
@@ -24,11 +25,11 @@ public class Main {
 		OutputStream os = new FileOutputStream(new File("test.xls"));
 		
 		List<String> columns = Arrays.asList(
-				"Referencia","Criado em","Id","Nome",
+				"Referencia","Data","Id","Nome",
 				"Guid2","Label","Guid3","Number");
 		
 		List<String> fields = Arrays.asList(
-				"Guid","CreatedAt","Id","Name","Model2.Guid",
+				"Guid","Date","Id","Name","Model2.Guid",
 				"Model2.Label","Model2.Model3.Guid","Model2.Model3.Number");
 		
 		Set<String> fieldsToTranslate = new HashSet<>();
@@ -50,12 +51,15 @@ public class Main {
 		objs.add(new Model1("guid4", 4L, new Date(), "time", 
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
 		
-		try(ExcelGenerator eg = new ExcelGenerator()){
+		Map<ExcelOptionId, Object> options = new HashMap<>();
+		options.put(ExcelOptionId.AUTOSIZE, true);
+		options.put(ExcelOptionId.INICIAL_POSITION, 1);
+		options.put(ExcelOptionId.DATE_FORMAT, "dd/mm/yyyy");
+		
+		try(ExcelGenerator eg = new ExcelGenerator(options)){
 			eg.generate(objs, columns, fields, fieldsToTranslate, translator);
 			eg.write(os);
-		} catch (Exception e) {
-			System.out.println("Trace: "+e.getMessage());
-		}
+		} 
 	}
 	
 }
