@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.decioamador.generator.excel.ExcelGenerator;
+import org.decioamador.generator.excel.ExcelGeneratorFacade;
 import org.decioamador.generator.excel.model.ExcelOptionId;
 import org.decioamador.generator.excel.test.model.Model1;
 import org.decioamador.generator.excel.test.model.Model2;
@@ -20,9 +21,9 @@ import org.decioamador.generator.excel.test.model.Model3;
 
 public class Main {
 
-	public static void main(String [] args) throws Exception{
+	public static void main(String [] args){
 		
-		OutputStream os = new FileOutputStream(new File("test.xls"));
+		OutputStream os;
 		
 		List<String> columns = Arrays.asList(
 				"Referencia","Data","Id","Nome",
@@ -52,14 +53,17 @@ public class Main {
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
 		
 		Map<ExcelOptionId, Object> options = new HashMap<>();
-		options.put(ExcelOptionId.AUTOSIZE, true);
+		options.put(ExcelOptionId.AUTOSIZE_COLUMNS, true);
 		options.put(ExcelOptionId.INICIAL_POSITION, 1);
 		options.put(ExcelOptionId.DATE_FORMAT, "dd/mm/yyyy");
 		
-		try(ExcelGenerator eg = new ExcelGenerator(options)){
+		try(ExcelGeneratorFacade eg = new ExcelGenerator(options)){
+			os = new FileOutputStream(new File("test.xls"));
 			eg.generate(objs, columns, fields, fieldsToTranslate, translator);
 			eg.write(os);
-		} 
+		} catch (Exception e) {
+			System.out.println("Generation Error.");
+		}
 	}
 	
 }

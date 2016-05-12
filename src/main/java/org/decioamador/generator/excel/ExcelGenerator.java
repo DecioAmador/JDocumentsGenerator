@@ -2,7 +2,6 @@ package org.decioamador.generator.excel;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,8 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -24,9 +21,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.decioamador.generator.excel.model.ExcelOptionId;
 
 /**
+ * This class is an implementation using org.apache.poi
  * @author D&eacute;cio Amador
  */
-public class ExcelGenerator implements Closeable, AutoCloseable {
+public class ExcelGenerator implements ExcelGeneratorFacade  {
 	
 	private static final Class<?>[] EMPTY_ARRAY_CLASS = new Class[0];
 	private static final Object[] EMPTY_ARRAY_OBJECT = new Object[0];
@@ -46,35 +44,57 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 	}
 
 	public ExcelGenerator() {
-		sdf = new SimpleDateFormat(dateFormat);
+		postConstruct();
 	}
 	
 	public ExcelGenerator(Map<ExcelOptionId,Object> options) {
 		resolveOptions(options);
-		sdf = new SimpleDateFormat(dateFormat);
+		postConstruct();
 	}
 	
+	/**
+	 * Resolves the options available
+	 * @param options
+	 */
 	private void resolveOptions(Map<ExcelOptionId,Object> options){
 		for(Entry<ExcelOptionId, Object> option : options.entrySet()){
 			if(option.getValue() != null){
 				switch(option.getKey()){
 					case DATE_FORMAT :
-						dateFormat = option.getValue().toString();
-					break;
+						if(option.getValue() instanceof String){
+							dateFormat = option.getValue().toString();
+						}
+						break;
 					case INICIAL_POSITION:
-						initialPosition = Integer.valueOf(option.getValue().toString());
-					break;
-					case AUTOSIZE:
-						autosize = Boolean.valueOf(option.getValue().toString());
-					break;
+						if(option.getValue() instanceof Integer){
+							initialPosition = Integer.valueOf(option.getValue().toString());
+						}
+						break;
+					case AUTOSIZE_COLUMNS:
+						if(option.getValue() instanceof Boolean){
+							autosize = Boolean.valueOf(option.getValue().toString());
+						}
+						break;
 				}
 			}
 		}
 	}
+
+	/**
+	 * It should work like the annotation that I didn't use so that this can
+	 * still be used in Java SE.
+	 */
+	private void postConstruct(){
+		sdf = new SimpleDateFormat(dateFormat);
+	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> fieldsToTranslate, Map<String,String> translator) throws Exception {
-		boolean toTranslate;
+		boolean toTranslate = false;
 		int rowNum = initialPosition, columnNum = initialPosition;
 		
 		Object o = null;
@@ -83,6 +103,10 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 		
 		HSSFRow row;
 		HSSFCell cell;
+		
+		if(columns.size() != fields.size()){
+			throw new IllegalArgumentException("The columns don't have the same size as the fields");
+		}
 		
 		// Put titles
 		row = ws.createRow(rowNum++);
@@ -110,7 +134,9 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 					}
 				}
 				cell = row.createCell(columnNum++);
-				toTranslate = fieldsToTranslate.contains(field);
+				if(fieldsToTranslate != null){
+					toTranslate = fieldsToTranslate.contains(field);
+				}
 				cell.setCellValue(getValue(o, toTranslate, translator));
 			}
 		}
@@ -123,6 +149,13 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 		}
 	}
 	
+	/**
+	 * This methods makes the textual representation of a value
+	 * @param obj
+	 * @param toTranslate
+	 * @param translator
+	 * @return String 
+	 */
 	private String getValue(Object obj, boolean toTranslate, Map<String,String> translator){
 		if(obj != null){
 			if(toTranslate){
@@ -137,16 +170,27 @@ public class ExcelGenerator implements Closeable, AutoCloseable {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void write(InputStream is) throws IOException{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		wb.write(bos);
 		is = new ByteArrayInputStream(bos.toByteArray());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void write(OutputStream os) throws IOException{
 		wb.write(os);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void close() throws IOException {
 		wb.close();
