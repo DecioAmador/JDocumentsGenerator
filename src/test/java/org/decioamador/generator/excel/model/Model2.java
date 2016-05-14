@@ -1,4 +1,4 @@
-package org.decioamador.generator.excel.test.model;
+package org.decioamador.generator.excel.model;
 
 public class Model2 {
 	

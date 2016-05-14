@@ -1,5 +1,6 @@
-package org.decioamador.generator.excel.test;
+package org.decioamador.generator.excel;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -12,12 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.decioamador.generator.excel.ExcelGeneratorPOI;
-import org.decioamador.generator.excel.ExcelGenerator;
-import org.decioamador.generator.excel.model.ExcelOption;
-import org.decioamador.generator.excel.test.model.Model1;
-import org.decioamador.generator.excel.test.model.Model2;
-import org.decioamador.generator.excel.test.model.Model3;
+import org.decioamador.generator.excel.model.ExcelOptionPOI;
+import org.decioamador.generator.excel.model.Model1;
+import org.decioamador.generator.excel.model.Model2;
+import org.decioamador.generator.excel.model.Model3;
 
 public class Main {
 
@@ -36,7 +35,7 @@ public class Main {
 		Set<String> fieldsToTranslate = new HashSet<>();
 		fieldsToTranslate.add("Name");
 		
-		Map<String,String> translator = new HashMap<>();
+		Map<String,String> translator = new HashMap<>(); // EN to PT
 		translator.put("people","pessoas");
 		translator.put("life","vida");
 		translator.put("date","data");
@@ -52,10 +51,10 @@ public class Main {
 		objs.add(new Model1("guid4", 4L, new Date(), "time", 
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
 		
-		Map<ExcelOption, Object> options = new HashMap<>();
-		options.put(ExcelOption.AUTOSIZE_COLUMNS, true);
-		options.put(ExcelOption.INICIAL_POSITION, 1);
-		options.put(ExcelOption.DATE_FORMAT, "dd/mm/yyyy");
+		Map<ExcelOptionPOI, Object> options = new HashMap<>();
+		options.put(ExcelOptionPOI.AUTOSIZE_COLUMNS, true);
+		options.put(ExcelOptionPOI.INICIAL_POSITION, new Point(2,1));
+		options.put(ExcelOptionPOI.DATE_FORMAT, "dd/mm/yyyy");
 		
 		try(ExcelGenerator eg = new ExcelGeneratorPOI(options)){
 			os = new FileOutputStream(new File("test.xls"));

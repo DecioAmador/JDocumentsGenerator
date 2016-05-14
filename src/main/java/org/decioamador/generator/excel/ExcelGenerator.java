@@ -10,7 +10,6 @@ import java.util.Set;
 
 /**
  * This generates an Excel Document based on the object itself
- * 
  * @author D&eacute;cio Amador
  */
 public interface ExcelGenerator extends Closeable, AutoCloseable {
@@ -29,8 +28,7 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 * @param translator
 	 *            It have the key and the value to translate
 	 * @throws Exception
-	 *             if the document can't be generated
-	 * @requires the size of the columns as to be the same as the fields
+	 *            If the document can't be generated
 	 */
 	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTranslate,
 			Map<String, String> translator) throws Exception;
@@ -39,9 +37,10 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 * Writes the generated document on the stream
 	 * 
 	 * @param is
+	 *            InputStream that will have the content
 	 * @throws IOException
-	 *             if an I/O error occurs. In particular, an IOException may be
-	 *             thrown if the output stream has been closed.
+	 *            If an I/O error occurs. In particular, an IOException may be
+	 *            thrown if the output stream has been closed.
 	 */
 	public void write(InputStream is) throws IOException;
 
@@ -49,9 +48,10 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 * Writes the generated document on the stream
 	 * 
 	 * @param os
+	 *            OutputStream that will have the content
 	 * @throws IOException
-	 *             if an I/O error occurs. In particular, an IOException may be
-	 *             thrown if the output stream has been closed.
+	 *            If an I/O error occurs. In particular, an IOException may be
+	 *            thrown if the output stream has been closed.
 	 */
 	public void write(OutputStream os) throws IOException;
 
