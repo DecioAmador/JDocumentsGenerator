@@ -3,7 +3,7 @@ package org.decioamador.generator.excel.model;
 /**
  * @author D&eacute;cio Amador
  */
-public enum ExcelOptionId {
+public enum ExcelOption {
 
 	/**
 	 * Expected type: String

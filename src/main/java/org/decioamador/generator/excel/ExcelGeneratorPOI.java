@@ -18,7 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.decioamador.generator.excel.model.ExcelOptionId;
+import org.decioamador.generator.excel.model.ExcelOption;
 
 /**
  * This class is an implementation using org.apache.poi
@@ -47,7 +47,7 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 		postConstruct();
 	}
 	
-	public ExcelGeneratorPOI(Map<ExcelOptionId,Object> options) {
+	public ExcelGeneratorPOI(Map<ExcelOption,Object> options) {
 		resolveOptions(options);
 		postConstruct();
 	}
@@ -56,8 +56,8 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	 * Resolves the options available
 	 * @param options
 	 */
-	private void resolveOptions(Map<ExcelOptionId,Object> options){
-		for(Entry<ExcelOptionId, Object> option : options.entrySet()){
+	private void resolveOptions(Map<ExcelOption,Object> options){
+		for(Entry<ExcelOption, Object> option : options.entrySet()){
 			if(option.getValue() != null){
 				switch(option.getKey()){
 					case DATE_FORMAT :
