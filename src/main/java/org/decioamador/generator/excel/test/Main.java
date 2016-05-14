@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.decioamador.generator.excel.ExcelGeneratorPOI;
 import org.decioamador.generator.excel.ExcelGenerator;
-import org.decioamador.generator.excel.ExcelGeneratorFacade;
 import org.decioamador.generator.excel.model.ExcelOptionId;
 import org.decioamador.generator.excel.test.model.Model1;
 import org.decioamador.generator.excel.test.model.Model2;
@@ -57,7 +57,7 @@ public class Main {
 		options.put(ExcelOptionId.INICIAL_POSITION, 1);
 		options.put(ExcelOptionId.DATE_FORMAT, "dd/mm/yyyy");
 		
-		try(ExcelGeneratorFacade eg = new ExcelGenerator(options)){
+		try(ExcelGenerator eg = new ExcelGeneratorPOI(options)){
 			os = new FileOutputStream(new File("test.xls"));
 			eg.generate(objs, columns, fields, fieldsToTranslate, translator);
 			eg.write(os);
