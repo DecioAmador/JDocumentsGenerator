@@ -4,18 +4,16 @@ import java.awt.Point;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -30,14 +28,9 @@ import org.decioamador.generator.excel.model.ExcelOptionPOI;
  */
 public class ExcelGeneratorPOI implements ExcelGenerator  {
 	
-	private static final List<Class<?>> CLASSES = Arrays.asList(
-			String.class,StringBuilder.class,StringBuffer.class,
-			Double.class,Float.class,Short.class,Integer.class,Long.class,
-			Date.class,Boolean.class,Byte.class);
 	private static final Class<?>[] EMPTY_ARRAY_CLASS = new Class[0];
 	private static final Object[] EMPTY_ARRAY_OBJECT = new Object[0];
 	private static final String GET = "get";
-	private static final String GET_CLASS = "getClass";
 	
 	private int initPosRow = 0;
 	private int initPosCol = 0;
@@ -107,7 +100,9 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
-			Set<String> fieldsToTranslate, Map<String,String> translator) throws Exception {
+			Set<String> fieldsToTranslate, Map<String,String> translator,
+			Set<String> propsToTrans, Properties prop, 
+			Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception {
 		int rowNum = initPosRow, columnNum = initPosCol, i;
 		boolean going;
 		Object o = null;
@@ -147,7 +142,8 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 						i++;
 					}
 					cell = row.createCell(columnNum++);
-					cell.setCellValue(getValue(o, field, fieldsToTranslate, translator));
+					cell.setCellValue(getValue(o,field,fieldsToTranslate,
+							translator,propsToTrans,prop,resrcBunToTrans,rb));
 				}
 			}
 		}
@@ -158,108 +154,40 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 			}
 		}
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	@Override
-	public void generate(List<?> objs, List<String> columns, Set<String> fieldsToTrans, 
-			Map<String,String> translator) throws Exception {
-		int rowNum = initPosRow, columnNum = initPosCol;
-		List<DualString> rowValues;
-		HSSFRow row;
-		HSSFCell cell;
-		
-		row = ws.createRow(rowNum++);
-		for(String column : columns){
-			cell = row.createCell(columnNum++);
-			cell.setCellValue(column);
-		}
-		
-		for(Object obj : objs){
-			if(obj != null){
-				columnNum = initPosCol;
-				rowValues = new ArrayList<>();
-				row = ws.createRow(rowNum++);
-				handleObject(obj,row,rowValues,"",fieldsToTrans,translator);
-				Collections.sort(rowValues);
-				for(DualString ds : rowValues){
-					cell = row.createCell(columnNum++);
-					cell.setCellValue(ds.getValue());
-				}
-			}
-		}
-		
-		if(autosize){
-			for(int i = initPosCol; i <= columnNum; i++){
-				ws.autoSizeColumn(i);
-			}
-		}
+	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTrans,
+			Map<String, String> translator, Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception {
+		generate(objs,columns,fields,fieldsToTrans,translator,null,null,resrcBunToTrans,rb);
+	}
+
+	@Override
+	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> resrcBunToTrans,
+			ResourceBundle rb) throws Exception {
+		generate(objs,columns,fields,null,null,null,null,resrcBunToTrans,rb);
+	}
+
+	@Override
+	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> propsToTrans,
+			Properties prop) throws Exception {
+		generate(objs,columns,fields,null,null,propsToTrans,prop,null,null);
+	}
+
+	@Override
+	public void generate(List<?> objs, List<String> columns, List<String> fields) throws Exception {
+		generate(objs,columns,fields,null,null,null,null,null,null);
 	}
 	
-	/**
-	 * Recursive method to handle the object
-	 * 
-	 * @param o
-	 *            Object being handle
-	 * @param row
-	 *            Row being process
-	 * @param rowValues
-	 *            Row values
-	 * @param field
-	 *            Field path
-	 * @param fieldsToTrans
-	 *            Fields that you want to translate
-	 * @param translator
-	 *            It have the key and the value to translate
-	 * @throws Exception
-	 *             Whenever the object can't be handle
-	 */
-	private void handleObject(Object o, HSSFRow row, List<DualString> rowValues, String field,
-			Set<String> fieldsToTrans, Map<String,String> translator) throws Exception{
-		if(o != null){
-			for(Method m : o.getClass().getMethods()){
-				if(m.getName().startsWith(GET) && !m.getName().equals(GET_CLASS)){
-					Object temp = m.invoke(o, EMPTY_ARRAY_OBJECT);
-					if(temp != null){
-						String aux = field+"."+m.getName().substring(3);
-						if(!CLASSES.contains(temp.getClass())){
-							handleObject(temp,row,rowValues,aux,fieldsToTrans,translator);
-						} else {
-							rowValues.add(new DualString(m.getName(),getValue(
-									temp,aux.substring(1),fieldsToTrans,translator)));
-						}
-					}
-				}
-			}
-		}
+	@Override
+	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTrans,
+			Map<String, String> translator, Set<String> propsToTrans, Properties prop) throws Exception {
+		generate(objs,columns,fields,fieldsToTrans,translator,propsToTrans,prop,null,null);
 	}
 	
-	/**
-	 * Utility class 
-	 */
-	private static class DualString implements Comparable<DualString>{
-		
-		private String name;
-		private String value;
-		
-		public DualString(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getValue() {
-			return value;
-		}
-		public String getName(){
-			return name;
-		}
-
-		@Override
-		public int compareTo(DualString o) {
-			return name.compareTo(o.getName());
-		}
-		
+	@Override
+	public void generate(List<?> objs, List<String> columns, List<String> fields, 
+			Set<String> fieldsToTrans, Map<String, String> translator) throws Exception {
+		generate(objs,columns,fields,fieldsToTrans,translator,null,null,null,null);
 	}
 	
 	/**
@@ -276,12 +204,26 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	 * @return String the representation value of the object
 	 */
 	private String getValue(Object obj, String field, 
-			Set<String> fieldsToTrans, Map<String,String> translator){
-		if(obj != null){
+			Set<String> fieldsToTrans, Map<String,String> translator,
+			Set<String> propsToTrans, Properties prop,
+			Set<String> resrcBunToTrans, ResourceBundle rb){
+		if(obj != null && field != null && !field.isEmpty()){
 			
 			if(fieldsToTrans != null && translator != null){
 				if(fieldsToTrans.contains(field)){
 					return translator.get(obj.toString());
+				}
+			}
+			
+			if(propsToTrans != null && prop != null){
+				if(propsToTrans.contains(field)){
+					return prop.getProperty(obj.toString());
+				}
+			}
+			
+			if(resrcBunToTrans != null && rb != null){
+				if(resrcBunToTrans.contains(field)){
+					return rb.getString(obj.toString());
 				}
 			}
 			
@@ -297,12 +239,13 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	
 	/**
 	 * {@inheritDoc}
+	 * @return 
 	 */
 	@Override
-	public void write(InputStream is) throws IOException{
+	public ByteArrayInputStream write() throws IOException{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		wb.write(bos);
-		is = new ByteArrayInputStream(bos.toByteArray());
+		return new ByteArrayInputStream(bos.toByteArray());
 	}
 	
 	/**
@@ -320,4 +263,5 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	public void close() throws IOException {
 		wb.close();
 	}
+
 }

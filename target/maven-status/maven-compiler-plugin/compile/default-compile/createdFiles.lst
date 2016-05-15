@@ -2,4 +2,3 @@ org\decioamador\generator\excel\ExcelGeneratorPOI$1.class
 org\decioamador\generator\excel\model\ExcelOptionPOI.class
 org\decioamador\generator\excel\ExcelGeneratorPOI.class
 org\decioamador\generator\excel\ExcelGenerator.class
-org\decioamador\generator\excel\ExcelGeneratorPOI$DualString.class

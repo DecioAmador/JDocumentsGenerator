@@ -50,6 +50,13 @@ public class Main {
 				new Model2("guidMD3","label3", new Model3("guidMDMD3", 3))));
 		objs.add(new Model1("guid4", 444L, new Date(), "time", 
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
+		objs.add(new Model1("guid5", 555L, new Date(), "time", 
+				new Model2("guidMD5","label5", null)));
+		objs.add(new Model1("guid6", 666L, new Date(), "time", 
+				null));
+		objs.add(null);
+		objs.add(new Model1("guid8", 888L, new Date(), "time", 
+				new Model2("guidMD8","label8", new Model3(null, 8))));
 		
 		Map<ExcelOptionPOI, Object> options = new HashMap<>();
 		options.put(ExcelOptionPOI.AUTOSIZE_COLUMNS, true);
@@ -62,14 +69,6 @@ public class Main {
 			eg.write(os);
 		} catch (Exception e) {
 			System.out.println("Generation Error.");
-		}
-		
-		try(ExcelGenerator eg2 = new ExcelGeneratorPOI(options)){
-			os = new FileOutputStream(new File("test2.xls"));
-			eg2.generate(objs,columns,fieldsToTranslate,translator);
-			eg2.write(os);
-		} catch (Exception e) {
-			System.out.println("Generation Error 2.");
 		}
 	}
 	
