@@ -42,13 +42,13 @@ public class Main {
 		translator.put("time","tempo");
 		
 		List<Model1> objs = new ArrayList<>();
-		objs.add(new Model1("guid1", 1L, new Date(), "people", 
+		objs.add(new Model1("guid1", 111L, new Date(), "people", 
 				new Model2("guidMD1","label1", new Model3("guidMDMD1", 1))));
-		objs.add(new Model1("guid2", 2L, new Date(), "life", 
+		objs.add(new Model1("guid2", 222L, new Date(), "life", 
 				new Model2("guidMD2","label2", new Model3("guidMDMD2", 2))));
-		objs.add(new Model1("guid3", 3L, new Date(), "date", 
+		objs.add(new Model1("guid3", 333L, new Date(), "date", 
 				new Model2("guidMD3","label3", new Model3("guidMDMD3", 3))));
-		objs.add(new Model1("guid4", 4L, new Date(), "time", 
+		objs.add(new Model1("guid4", 444L, new Date(), "time", 
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
 		
 		Map<ExcelOptionPOI, Object> options = new HashMap<>();
@@ -62,6 +62,14 @@ public class Main {
 			eg.write(os);
 		} catch (Exception e) {
 			System.out.println("Generation Error.");
+		}
+		
+		try(ExcelGenerator eg2 = new ExcelGeneratorPOI(options)){
+			os = new FileOutputStream(new File("test2.xls"));
+			eg2.generate(objs,columns,fieldsToTranslate,translator);
+			eg2.write(os);
+		} catch (Exception e) {
+			System.out.println("Generation Error 2.");
 		}
 	}
 	

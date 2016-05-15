@@ -9,6 +9,9 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +30,14 @@ import org.decioamador.generator.excel.model.ExcelOptionPOI;
  */
 public class ExcelGeneratorPOI implements ExcelGenerator  {
 	
+	private static final List<Class<?>> CLASSES = Arrays.asList(
+			String.class,StringBuilder.class,StringBuffer.class,
+			Double.class,Float.class,Short.class,Integer.class,Long.class,
+			Date.class,Boolean.class,Byte.class);
 	private static final Class<?>[] EMPTY_ARRAY_CLASS = new Class[0];
 	private static final Object[] EMPTY_ARRAY_OBJECT = new Object[0];
 	private static final String GET = "get";
+	private static final String GET_CLASS = "getClass";
 	
 	private int initPosRow = 0;
 	private int initPosCol = 0;
@@ -67,8 +75,6 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 					case DATE_FORMAT :
 						if(option.getValue() instanceof String){
 							dateFormat = option.getValue().toString();
-						} else {
-							throw new IllegalArgumentException("Date format isn't a String");
 						}
 						break;
 					case INICIAL_POSITION:
@@ -76,15 +82,11 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 							Point p = (Point) option.getValue();
 							initPosRow = new Double(p.getX()).intValue();
 							initPosCol = new Double(p.getY()).intValue();
-						} else {
-							throw new IllegalArgumentException("Inicial position isn't a Point");
 						}
 						break;
 					case AUTOSIZE_COLUMNS:
 						if(option.getValue() instanceof Boolean){
 							autosize = Boolean.valueOf(option.getValue().toString());
-						} else {
-							throw new IllegalArgumentException("Autosize isn't a Boolean");
 						}
 						break;
 				}
@@ -106,8 +108,8 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> fieldsToTranslate, Map<String,String> translator) throws Exception {
-		int rowNum = initPosRow, columnNum = initPosCol;
-		
+		int rowNum = initPosRow, columnNum = initPosCol, i;
+		boolean going;
 		Object o = null;
 		Class<?> clazz;
 		Method m;
@@ -115,42 +117,149 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 		HSSFRow row;
 		HSSFCell cell;
 		
-		// Put titles
 		row = ws.createRow(rowNum++);
 		for(String column : columns){
 			cell = row.createCell(columnNum++);
 			cell.setCellValue(column);
 		}
 		
-		// Put values
 		for(Object obj : objs){
-			clazz = obj.getClass();
-			columnNum = initPosCol;
-			row = ws.createRow(rowNum++);
-			for(String field : fields){
-				String [] mthds = field.split("[.]");
-				Class<?> temp = clazz;
-				o = obj;
-				for(String s : mthds){
-					m = temp.getDeclaredMethod(GET+s, EMPTY_ARRAY_CLASS);
-					o = m.invoke(o, EMPTY_ARRAY_OBJECT);
-					if(o != null){
-						temp = o.getClass();
-					} else {
-						break;
+			if(obj != null){
+				clazz = obj.getClass();
+				columnNum = initPosCol;
+				row = ws.createRow(rowNum++);
+				for(String field : fields){
+					String [] mthds = field.split("[.]");
+					Class<?> temp = clazz;
+					o = obj;
+					i = 0;
+					going = true;
+					while(i<mthds.length && going){
+						m = temp.getDeclaredMethod(GET+mthds[i], EMPTY_ARRAY_CLASS);
+						if(m != null){
+							o = m.invoke(o, EMPTY_ARRAY_OBJECT);
+							if(o != null){
+								temp = o.getClass();
+							} else {
+								going = false;
+							}
+						}
+						i++;
 					}
+					cell = row.createCell(columnNum++);
+					cell.setCellValue(getValue(o, field, fieldsToTranslate, translator));
 				}
-				cell = row.createCell(columnNum++);
-				cell.setCellValue(getValue(o, field, fieldsToTranslate, translator));
 			}
 		}
 		
-		// Autosize
+		if(autosize){
+			for(int j = initPosCol; j <= columnNum; j++){
+				ws.autoSizeColumn(j);
+			}
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void generate(List<?> objs, List<String> columns, Set<String> fieldsToTrans, 
+			Map<String,String> translator) throws Exception {
+		int rowNum = initPosRow, columnNum = initPosCol;
+		List<DualString> rowValues;
+		HSSFRow row;
+		HSSFCell cell;
+		
+		row = ws.createRow(rowNum++);
+		for(String column : columns){
+			cell = row.createCell(columnNum++);
+			cell.setCellValue(column);
+		}
+		
+		for(Object obj : objs){
+			if(obj != null){
+				columnNum = initPosCol;
+				rowValues = new ArrayList<>();
+				row = ws.createRow(rowNum++);
+				handleObject(obj,row,rowValues,"",fieldsToTrans,translator);
+				Collections.sort(rowValues);
+				for(DualString ds : rowValues){
+					cell = row.createCell(columnNum++);
+					cell.setCellValue(ds.getValue());
+				}
+			}
+		}
+		
 		if(autosize){
 			for(int i = initPosCol; i <= columnNum; i++){
 				ws.autoSizeColumn(i);
 			}
 		}
+	}
+	
+	/**
+	 * Recursive method to handle the object
+	 * 
+	 * @param o
+	 *            Object being handle
+	 * @param row
+	 *            Row being process
+	 * @param rowValues
+	 *            Row values
+	 * @param field
+	 *            Field path
+	 * @param fieldsToTrans
+	 *            Fields that you want to translate
+	 * @param translator
+	 *            It have the key and the value to translate
+	 * @throws Exception
+	 *             Whenever the object can't be handle
+	 */
+	private void handleObject(Object o, HSSFRow row, List<DualString> rowValues, String field,
+			Set<String> fieldsToTrans, Map<String,String> translator) throws Exception{
+		if(o != null){
+			for(Method m : o.getClass().getMethods()){
+				if(m.getName().startsWith(GET) && !m.getName().equals(GET_CLASS)){
+					Object temp = m.invoke(o, EMPTY_ARRAY_OBJECT);
+					if(temp != null){
+						String aux = field+"."+m.getName().substring(3);
+						if(!CLASSES.contains(temp.getClass())){
+							handleObject(temp,row,rowValues,aux,fieldsToTrans,translator);
+						} else {
+							rowValues.add(new DualString(m.getName(),getValue(
+									temp,aux.substring(1),fieldsToTrans,translator)));
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Utility class 
+	 */
+	private static class DualString implements Comparable<DualString>{
+		
+		private String name;
+		private String value;
+		
+		public DualString(String name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+		public String getName(){
+			return name;
+		}
+
+		@Override
+		public int compareTo(DualString o) {
+			return name.compareTo(o.getName());
+		}
+		
 	}
 	
 	/**
@@ -160,21 +269,27 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	 *            Object to process
 	 * @param field
 	 *            Field to process
-	 * @param fieldsToTranslate
+	 * @param fieldsToTrans
 	 *            Fields to translate
 	 * @param translator
 	 *            It has the the key and the translation value
 	 * @return String the representation value of the object
 	 */
-	private String getValue(Object obj, String field, Set<String> fieldsToTranslate, Map<String,String> translator){
+	private String getValue(Object obj, String field, 
+			Set<String> fieldsToTrans, Map<String,String> translator){
 		if(obj != null){
-			if(fieldsToTranslate.contains(field)){
-				return translator.get(obj.toString());
-			} else if(obj instanceof Date){
-				return sdf.format((Date) obj);
-			} else {
-				return obj.toString();
+			
+			if(fieldsToTrans != null && translator != null){
+				if(fieldsToTrans.contains(field)){
+					return translator.get(obj.toString());
+				}
 			}
+			
+			if(obj instanceof Date){
+				return sdf.format((Date) obj);
+			}
+			
+			return obj.toString();
 		} else {
 			return "";
 		}

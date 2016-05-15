@@ -1,4 +1,4 @@
-package decioamador_msoffice_generator;
+package msoffice_generator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -23,15 +23,31 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
-	 * @param fieldsToTranslate
+	 * @param fieldsToTrans
 	 *            Fields that you want to translate
 	 * @param translator
 	 *            It have the key and the value to translate
 	 * @throws Exception
 	 *            If the document can't be generated
 	 */
-	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTranslate,
-			Map<String, String> translator) throws Exception;
+	public void generate(List<?> objs, List<String> columns, List<String> fields, 
+			Set<String> fieldsToTrans, Map<String, String> translator) throws Exception;
+	
+	/**
+	 * It generates the document base on the arguments
+	 * 
+	 * @param objs
+	 *            Objects that will be the lines
+	 * @param columns
+	 *            The title of the columns
+	 * @param fieldsToTrans
+	 *            Fields that you want to translate
+	 * @param translator
+	 *            It have the key and the value to translate
+	 * @throws Exception
+	 */ 
+	public void generate(List<?> objs, List<String> columns, Set<String> fieldsToTrans, 
+			Map<String,String> translator) throws Exception;
 
 	/**
 	 * Writes the generated document on the stream
