@@ -14,12 +14,20 @@ public enum ExcelOptionPOI {
 	DATE_FORMAT,
 	
 	/**
-	 * <b>Expected type:</b> Point <br /> 
-	 * <b>Meaning:</b> The initial position of the table <br /> 
-	 * &nbsp;&nbsp;&nbsp;&nbsp;E.g: (2,1) - (third row, second column) <br /> 
-	 * <b>Default:</b> (0,0) - (first row, first column)
+	 * <b>Expected type:</b> Integer <br /> 
+	 * <b>Meaning:</b> The initial row of the table <br /> 
+	 * &nbsp;&nbsp;&nbsp;&nbsp;E.g: 1 -> second column <br /> 
+	 * <b>Default:</b> 0 -> first row
 	 */
-	INICIAL_POSITION,
+	INICIAL_POSITION_ROW,
+	
+	/**
+	 * <b>Expected type:</b> Integer <br /> 
+	 * <b>Meaning:</b> The initial column of the table  <br /> 
+	 * &nbsp;&nbsp;&nbsp;&nbsp;E.g: 2 -> third row <br /> 
+	 * <b>Default:</b> 0 -> first column
+	 */
+	INICIAL_POSITION_COLUMN,
 	
 	/**
 	 * <b>Expected type:</b> Boolean <br /> 

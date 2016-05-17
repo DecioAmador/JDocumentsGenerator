@@ -1,6 +1,5 @@
 package org.decioamador.generator.excel;
 
-import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -52,15 +51,15 @@ public class Main {
 				new Model2("guidMD4","label4", new Model3("guidMDMD4", 4))));
 		objs.add(new Model1("guid5", 555L, new Date(), "time", 
 				new Model2("guidMD5","label5", null)));
-		objs.add(new Model1("guid6", 666L, new Date(), "time", 
-				null));
+		objs.add(new Model1("guid6", 666L, new Date(), "time", null));
 		objs.add(null);
 		objs.add(new Model1("guid8", 888L, new Date(), "time", 
 				new Model2("guidMD8","label8", new Model3(null, 8))));
 		
 		Map<ExcelOptionPOI, Object> options = new HashMap<>();
 		options.put(ExcelOptionPOI.AUTOSIZE_COLUMNS, true);
-		options.put(ExcelOptionPOI.INICIAL_POSITION, new Point(2,1));
+		options.put(ExcelOptionPOI.INICIAL_POSITION_ROW, 2);
+		options.put(ExcelOptionPOI.INICIAL_POSITION_COLUMN, 1);
 		options.put(ExcelOptionPOI.DATE_FORMAT, "dd/mm/yyyy");
 		
 		try(ExcelGenerator eg = new ExcelGeneratorPOI(options)){

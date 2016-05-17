@@ -1,6 +1,5 @@
 package org.decioamador.generator.excel;
 
-import java.awt.Point;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -28,6 +28,7 @@ import org.decioamador.generator.excel.model.ExcelOptionPOI;
  */
 public class ExcelGeneratorPOI implements ExcelGenerator  {
 	
+	private static final String EMPTY_STRING = "";
 	private static final Class<?>[] EMPTY_ARRAY_CLASS = new Class[0];
 	private static final Object[] EMPTY_ARRAY_OBJECT = new Object[0];
 	private static final String GET = "get";
@@ -70,11 +71,14 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 							dateFormat = option.getValue().toString();
 						}
 						break;
-					case INICIAL_POSITION:
-						if(option.getValue() instanceof Point){
-							Point p = (Point) option.getValue();
-							initPosRow = new Double(p.getX()).intValue();
-							initPosCol = new Double(p.getY()).intValue();
+					case INICIAL_POSITION_ROW:
+						if(option.getValue() instanceof Integer){
+							initPosRow = (Integer) option.getValue();
+						}
+						break;
+					case INICIAL_POSITION_COLUMN:
+						if(option.getValue() instanceof Integer){
+							initPosCol = (Integer) option.getValue();
 						}
 						break;
 					case AUTOSIZE_COLUMNS:
@@ -88,7 +92,7 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 	}
 
 	/**
-	 * It should work like the annotation that I didn't use it, 
+	 * It should work like the annotation that I didn't use it 
 	 * so this can still be used in Java SE.
 	 */
 	private void postConstruct(){
@@ -104,9 +108,11 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 			Set<String> propsToTrans, Properties prop, 
 			Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception {
 		int rowNum = initPosRow, columnNum = initPosCol, i;
+		String [] mthds;
 		boolean going;
+		
 		Object o = null;
-		Class<?> clazz;
+		Class<?> clazz, temp;
 		Method m;
 		
 		HSSFRow row;
@@ -124,8 +130,8 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 				columnNum = initPosCol;
 				row = ws.createRow(rowNum++);
 				for(String field : fields){
-					String [] mthds = field.split("[.]");
-					Class<?> temp = clazz;
+					mthds = field.split("[.]");
+					temp = clazz;
 					o = obj;
 					i = 0;
 					going = true;
@@ -207,34 +213,31 @@ public class ExcelGeneratorPOI implements ExcelGenerator  {
 			Set<String> fieldsToTrans, Map<String,String> translator,
 			Set<String> propsToTrans, Properties prop,
 			Set<String> resrcBunToTrans, ResourceBundle rb){
+		String result = null;
 		if(obj != null && field != null && !field.isEmpty()){
-			
-			if(fieldsToTrans != null && translator != null){
-				if(fieldsToTrans.contains(field)){
-					return translator.get(obj.toString());
+			if(fieldsToTrans != null && translator != null
+					&& fieldsToTrans.contains(field)){
+				result = translator.get(obj.toString());
+			} else if(propsToTrans != null && prop != null
+					&& propsToTrans.contains(field)){
+				result = prop.getProperty(obj.toString());
+			}else if(resrcBunToTrans != null && rb != null
+					&& resrcBunToTrans.contains(field)){
+				try{
+					result = rb.getString(obj.toString());
+				} catch(MissingResourceException | ClassCastException e) {
+					result = EMPTY_STRING;
 				}
+			} else if(obj instanceof Date){
+				result = sdf.format((Date) obj);
+			} else {
+				result = obj.toString();
 			}
-			
-			if(propsToTrans != null && prop != null){
-				if(propsToTrans.contains(field)){
-					return prop.getProperty(obj.toString());
-				}
-			}
-			
-			if(resrcBunToTrans != null && rb != null){
-				if(resrcBunToTrans.contains(field)){
-					return rb.getString(obj.toString());
-				}
-			}
-			
-			if(obj instanceof Date){
-				return sdf.format((Date) obj);
-			}
-			
-			return obj.toString();
-		} else {
-			return "";
 		}
+		if(result == null){
+			result = EMPTY_STRING;
+		}
+		return result;
 	}
 	
 	/**
