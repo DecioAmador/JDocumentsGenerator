@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.jmsoffice-generator</groupId>
-	<artifactId>jmsoffice-generator</artifactId>
+	<groupId>org.jdocuments.generator</groupId>
+	<artifactId>jdocuments-generator</artifactId>
 	<version>1.0.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>Jmsoffice-generator</name>
+	<name>Jdocuments-generator</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -30,9 +30,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:DecioAmador/Jmsoffice-generator.git</connection>
-		<developerConnection>scm:git:git@github.com:DecioAmador/Jmsoffice-generator.git</developerConnection>
-		<url>git@github.com:DecioAmador/Jmsoffice-generator.git</url>
+		<connection>scm:git:git@github.com:DecioAmador/Jdocuments-generator.git</connection>
+		<developerConnection>scm:git:git@github.com:DecioAmador/Jdocuments-generator.git</developerConnection>
+		<url>git@github.com:DecioAmador/Jdocuments-generator.git</url>
 	</scm>
 
 	<build>

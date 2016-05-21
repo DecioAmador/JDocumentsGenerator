@@ -1,4 +1,4 @@
-package org.jmsoffice.generator.excel;
+package org.jdocuments.generator.excel;
 
 import java.io.Closeable;
 import java.io.IOException;

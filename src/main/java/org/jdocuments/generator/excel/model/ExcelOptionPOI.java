@@ -1,4 +1,4 @@
-package org.jmsoffice.generator.excel.model;
+package org.jdocuments.generator.excel.model;
 
 /**
  * Options of the ExcelGeneratorPOI

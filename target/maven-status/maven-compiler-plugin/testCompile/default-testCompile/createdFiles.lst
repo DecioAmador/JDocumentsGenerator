@@ -1,5 +1,5 @@
-org\jmsoffice\generator\excel\model\Model2.class
-msoffice_generator\AppTest.class
-org\jmsoffice\generator\excel\model\Model1.class
-org\jmsoffice\generator\excel\Main.class
-org\jmsoffice\generator\excel\model\Model3.class
+org\jdocuments\generator\excel\Main.class
+org\jdocuments\generator\excel\model\Model3.class
+org\jdocuments\generator\excel\AppTest.class
+org\jdocuments\generator\excel\model\Model1.class
+org\jdocuments\generator\excel\model\Model2.class
