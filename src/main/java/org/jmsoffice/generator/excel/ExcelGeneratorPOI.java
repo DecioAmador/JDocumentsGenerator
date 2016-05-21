@@ -1,4 +1,4 @@
-package org.decioamador.generator.excel;
+package org.jmsoffice.generator.excel;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.decioamador.generator.excel.model.ExcelOptionPOI;
+import org.jmsoffice.generator.excel.model.ExcelOptionPOI;
 
 /**
  * This class is an implementation using org.apache.poi

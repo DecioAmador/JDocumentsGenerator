@@ -1,4 +1,4 @@
-package org.decioamador.generator.excel;
+package org.jmsoffice.generator.excel;
 
 import java.io.Closeable;
 import java.io.IOException;

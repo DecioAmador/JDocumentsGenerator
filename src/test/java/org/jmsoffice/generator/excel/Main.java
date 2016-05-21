@@ -1,4 +1,4 @@
-package org.decioamador.generator.excel;
+package org.jmsoffice.generator.excel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.decioamador.generator.excel.model.ExcelOptionPOI;
-import org.decioamador.generator.excel.model.Model1;
-import org.decioamador.generator.excel.model.Model2;
-import org.decioamador.generator.excel.model.Model3;
+import org.jmsoffice.generator.excel.ExcelGenerator;
+import org.jmsoffice.generator.excel.ExcelGeneratorPOI;
+import org.jmsoffice.generator.excel.model.ExcelOptionPOI;
+import org.jmsoffice.generator.excel.model.Model1;
+import org.jmsoffice.generator.excel.model.Model2;
+import org.jmsoffice.generator.excel.model.Model3;
 
 public class Main {
 

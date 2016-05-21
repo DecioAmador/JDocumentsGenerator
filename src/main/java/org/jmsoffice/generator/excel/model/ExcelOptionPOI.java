@@ -1,4 +1,4 @@
-package org.decioamador.generator.excel.model;
+package org.jmsoffice.generator.excel.model;
 
 /**
  * Options of the ExcelGeneratorPOI
