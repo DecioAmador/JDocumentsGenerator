@@ -1,4 +1,4 @@
-package org.jdocuments.generator.excel.model;
+package com.github.decioamador.jdocsgen.excel.model;
 
 import java.util.Date;
 

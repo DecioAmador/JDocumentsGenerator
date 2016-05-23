@@ -1,4 +1,4 @@
-org\jdocuments\generator\excel\ExcelGeneratorPOI.class
-org\jdocuments\generator\excel\ExcelGenerator.class
-org\jdocuments\generator\excel\model\ExcelOptionPOI.class
-org\jdocuments\generator\excel\ExcelGeneratorPOI$1.class
+com\github\decioamador\jdocsgen\excel\ExcelGeneratorPoi.class
+com\github\decioamador\jdocsgen\excel\ExcelGeneratorPoi$1.class
+com\github\decioamador\jdocsgen\excel\model\ExcelOptionPoi.class
+com\github\decioamador\jdocsgen\excel\ExcelGenerator.class

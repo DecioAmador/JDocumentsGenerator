@@ -1,5 +1,5 @@
-org\jdocuments\generator\excel\Main.class
-org\jdocuments\generator\excel\model\Model3.class
-org\jdocuments\generator\excel\AppTest.class
-org\jdocuments\generator\excel\model\Model1.class
-org\jdocuments\generator\excel\model\Model2.class
+com\github\decioamador\jdocsgen\excel\model\Model3.class
+com\github\decioamador\jdocsgen\excel\AppTest.class
+com\github\decioamador\jdocsgen\excel\model\Model2.class
+com\github\decioamador\jdocsgen\excel\model\Model1.class
+com\github\decioamador\jdocsgen\excel\Main.class

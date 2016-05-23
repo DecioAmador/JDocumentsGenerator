@@ -1,4 +1,4 @@
-package org.jdocuments.generator.excel;
+package com.github.decioamador.jdocsgen.excel;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
