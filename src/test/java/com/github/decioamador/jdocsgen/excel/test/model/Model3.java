@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel.model;
+package com.github.decioamador.jdocsgen.excel.test.model;
 
 public class Model3 {
 

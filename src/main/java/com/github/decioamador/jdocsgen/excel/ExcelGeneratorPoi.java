@@ -26,6 +26,7 @@ import com.github.decioamador.jdocsgen.excel.model.ExcelOptionPoi;
 /**
  * This class is an implementation using org.apache.poi
  * @author D&eacute;cio Amador
+ * @since 1.0.0.0
  */
 public class ExcelGeneratorPoi implements ExcelGenerator  {
 	
@@ -42,16 +43,26 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 	
 	private HSSFWorkbook wb;
 	private HSSFSheet ws;
-	
+
+	/**
+	 * Common to constructors
+	 */
 	{
 		wb = new HSSFWorkbook();
 		ws = wb.createSheet();
 	}
 
+	/**
+	 * Default constructor
+	 */
 	public ExcelGeneratorPoi() {
 		postConstruct();
 	}
 	
+	/**
+	 * Constructor with options
+	 * @param options to construct the document
+	 */
 	public ExcelGeneratorPoi(Map<ExcelOptionPoi,Object> options) {
 		resolveOptions(options);
 		postConstruct();
@@ -162,35 +173,53 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTrans,
 			Map<String, String> translator, Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception {
 		generate(objs,columns,fields,fieldsToTrans,translator,null,null,resrcBunToTrans,rb);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> resrcBunToTrans,
 			ResourceBundle rb) throws Exception {
 		generate(objs,columns,fields,null,null,null,null,resrcBunToTrans,rb);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> propsToTrans,
 			Properties prop) throws Exception {
 		generate(objs,columns,fields,null,null,propsToTrans,prop,null,null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields) throws Exception {
 		generate(objs,columns,fields,null,null,null,null,null,null);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, Set<String> fieldsToTrans,
 			Map<String, String> translator, Set<String> propsToTrans, Properties prop) throws Exception {
 		generate(objs,columns,fields,fieldsToTrans,translator,propsToTrans,prop,null,null);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> fieldsToTrans, Map<String, String> translator) throws Exception {

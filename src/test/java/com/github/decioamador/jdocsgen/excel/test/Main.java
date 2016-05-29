@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel;
+package com.github.decioamador.jdocsgen.excel.test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,9 +15,9 @@ import java.util.Set;
 import com.github.decioamador.jdocsgen.excel.ExcelGenerator;
 import com.github.decioamador.jdocsgen.excel.ExcelGeneratorPoi;
 import com.github.decioamador.jdocsgen.excel.model.ExcelOptionPoi;
-import com.github.decioamador.jdocsgen.excel.model.Model1;
-import com.github.decioamador.jdocsgen.excel.model.Model2;
-import com.github.decioamador.jdocsgen.excel.model.Model3;
+import com.github.decioamador.jdocsgen.excel.test.model.Model1;
+import com.github.decioamador.jdocsgen.excel.test.model.Model2;
+import com.github.decioamador.jdocsgen.excel.test.model.Model3;
 
 public class Main {
 

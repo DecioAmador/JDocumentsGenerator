@@ -3,6 +3,7 @@ package com.github.decioamador.jdocsgen.excel.model;
 /**
  * Options of the ExcelGeneratorPOI
  * @author D&eacute;cio Amador
+ * @since 1.0.0.0
  */
 public enum ExcelOptionPoi {
 

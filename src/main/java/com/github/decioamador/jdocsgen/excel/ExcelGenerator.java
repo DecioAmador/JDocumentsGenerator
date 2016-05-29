@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * This generates an Excel Document based on the object itself
  * @author D&eacute;cio Amador
+ * @since 1.0.0.0
  */
 public interface ExcelGenerator extends Closeable, AutoCloseable {
 	
