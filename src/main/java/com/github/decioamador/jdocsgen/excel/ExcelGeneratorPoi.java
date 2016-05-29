@@ -272,7 +272,6 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 	
 	/**
 	 * {@inheritDoc}
-	 * @return 
 	 */
 	@Override
 	public ByteArrayInputStream write() throws IOException{

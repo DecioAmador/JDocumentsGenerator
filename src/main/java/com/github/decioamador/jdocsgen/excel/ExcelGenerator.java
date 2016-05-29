@@ -16,7 +16,7 @@ import java.util.Set;
  * @since 1.0.0.0
  */
 public interface ExcelGenerator extends Closeable, AutoCloseable {
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -45,7 +45,7 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 			Set<String> fieldsToTrans, Map<String, String> translator, 
 			Set<String> propsToTrans, Properties prop, 
 			Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception;
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -69,7 +69,7 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> fieldsToTrans, Map<String, String> translator, 
 			Set<String> resrcBunToTrans, ResourceBundle rb) throws Exception;
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -102,13 +102,17 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 *            Fields that you want to translate
 	 * @param translator
 	 *            It have the key and the value to translate
+	 * @param propsToTrans
+	 *            Fields that you want to translate with Properties
+	 * @param prop
+	 *            Properties to used
 	 * @throws Exception
 	 *            If the document can't be generated
 	 */
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> fieldsToTrans, Map<String, String> translator, 
 			Set<String> propsToTrans, Properties prop) throws Exception;
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -118,16 +122,16 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
-	 * @param fieldsToTrans
-	 *            Fields that you want to translate
-	 * @param translator
-	 *            It have the key and the value to translate
+	 * @param propsToTrans
+	 *            Fields that you want to translate with Properties
+	 * @param prop
+	 *            Properties to used
 	 * @throws Exception
 	 *            If the document can't be generated
 	 */
 	public void generate(List<?> objs, List<String> columns, List<String> fields, 
 			Set<String> propsToTrans, Properties prop) throws Exception;
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -137,15 +141,11 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
-	 * @param fieldsToTrans
-	 *            Fields that you want to translate
-	 * @param translator
-	 *            It have the key and the value to translate
 	 * @throws Exception
 	 *            If the document can't be generated
 	 */
 	public void generate(List<?> objs, List<String> columns, List<String> fields)throws Exception;
-	
+
 	/**
 	 * It generates the document base on the arguments
 	 * 
@@ -168,8 +168,7 @@ public interface ExcelGenerator extends Closeable, AutoCloseable {
 	/**
 	 * Writes the generated document on the stream
 	 * 
-	 * @param is
-	 *            InputStream that will have the content
+	 * @return InputStream it was the content of the file generated
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
