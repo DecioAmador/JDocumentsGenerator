@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel;
+package com.github.decioamador.jdocsgen.xls;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,14 +21,14 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import com.github.decioamador.jdocsgen.excel.model.ExcelOptionPoi;
+import com.github.decioamador.jdocsgen.xls.model.XlsOptionP;
 
 /**
- * This class is an implementation using org.apache.poi
+ * This class is an implementation of XlsGenerator
  * @author D&eacute;cio Amador
  * @since 1.0.0.0
  */
-public class ExcelGeneratorPoi implements ExcelGenerator  {
+public class XlsGeneratorP implements XlsGenerator  {
 	
 	private static final String EMPTY_STRING = "";
 	private static final Class<?>[] EMPTY_ARRAY_CLASS = new Class[0];
@@ -55,7 +55,7 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 	/**
 	 * Default constructor
 	 */
-	public ExcelGeneratorPoi() {
+	public XlsGeneratorP() {
 		postConstruct();
 	}
 	
@@ -63,7 +63,7 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 	 * Constructor with options
 	 * @param options to construct the document
 	 */
-	public ExcelGeneratorPoi(Map<ExcelOptionPoi,Object> options) {
+	public XlsGeneratorP(Map<XlsOptionP,Object> options) {
 		resolveOptions(options);
 		postConstruct();
 	}
@@ -74,8 +74,8 @@ public class ExcelGeneratorPoi implements ExcelGenerator  {
 	 * @param options
 	 *            Options of the this implementation
 	 */
-	private void resolveOptions(Map<ExcelOptionPoi,Object> options){
-		for(Entry<ExcelOptionPoi, Object> option : options.entrySet()){
+	private void resolveOptions(Map<XlsOptionP,Object> options){
+		for(Entry<XlsOptionP, Object> option : options.entrySet()){
 			if(option.getValue() != null){
 				switch(option.getKey()){
 					case DATE_FORMAT :

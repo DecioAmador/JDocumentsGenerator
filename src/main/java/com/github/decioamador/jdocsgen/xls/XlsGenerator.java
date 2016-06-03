@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel;
+package com.github.decioamador.jdocsgen.xls;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -11,11 +11,11 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
- * This generates an Excel Document based on the object itself
+ * This generates a xls Document based on the object itself
  * @author D&eacute;cio Amador
  * @since 1.0.0.0
  */
-public interface ExcelGenerator extends Closeable, AutoCloseable {
+public interface XlsGenerator extends Closeable, AutoCloseable {
 
 	/**
 	 * It generates the document base on the arguments

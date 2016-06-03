@@ -1,11 +1,11 @@
-package com.github.decioamador.jdocsgen.excel.model;
+package com.github.decioamador.jdocsgen.xls.model;
 
 /**
- * Options of the ExcelGeneratorPOI
+ * Options of the XlsGeneratorP
  * @author D&eacute;cio Amador
  * @since 1.0.0.0
  */
-public enum ExcelOptionPoi {
+public enum XlsOptionP {
 
 	/**
 	 * <b>Expected type:</b> String <br> 

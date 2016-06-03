@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel.test;
+package com.github.decioamador.jdocsgen.xls.test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.decioamador.jdocsgen.excel.ExcelGenerator;
-import com.github.decioamador.jdocsgen.excel.ExcelGeneratorPoi;
-import com.github.decioamador.jdocsgen.excel.model.ExcelOptionPoi;
-import com.github.decioamador.jdocsgen.excel.test.model.Model1;
-import com.github.decioamador.jdocsgen.excel.test.model.Model2;
-import com.github.decioamador.jdocsgen.excel.test.model.Model3;
+import com.github.decioamador.jdocsgen.xls.XlsGenerator;
+import com.github.decioamador.jdocsgen.xls.XlsGeneratorP;
+import com.github.decioamador.jdocsgen.xls.model.XlsOptionP;
+import com.github.decioamador.jdocsgen.xls.test.model.Model1;
+import com.github.decioamador.jdocsgen.xls.test.model.Model2;
+import com.github.decioamador.jdocsgen.xls.test.model.Model3;
 
 public class Main {
 
@@ -58,13 +58,13 @@ public class Main {
 		objs.add(new Model1("guid8", 888L, new Date(), "time", 
 				new Model2("guidMD8","label8", new Model3(null, 8))));
 		
-		Map<ExcelOptionPoi, Object> options = new HashMap<>();
-		options.put(ExcelOptionPoi.AUTOSIZE_COLUMNS, true);
-		options.put(ExcelOptionPoi.INICIAL_POSITION_ROW, 2);
-		options.put(ExcelOptionPoi.INICIAL_POSITION_COLUMN, 1);
-		options.put(ExcelOptionPoi.DATE_FORMAT, "dd/mm/yyyy");
+		Map<XlsOptionP, Object> options = new HashMap<>();
+		options.put(XlsOptionP.AUTOSIZE_COLUMNS, true);
+		options.put(XlsOptionP.INICIAL_POSITION_ROW, 2);
+		options.put(XlsOptionP.INICIAL_POSITION_COLUMN, 1);
+		options.put(XlsOptionP.DATE_FORMAT, "dd/mm/yyyy");
 		
-		try(ExcelGenerator eg = new ExcelGeneratorPoi(options)){
+		try(XlsGenerator eg = new XlsGeneratorP(options)){
 			os = new FileOutputStream(new File("test.xls"));
 			eg.generate(objs, columns, fields, fieldsToTranslate, translator);
 			eg.write(os);

@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.excel.test;
+package com.github.decioamador.jdocsgen.xls.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
