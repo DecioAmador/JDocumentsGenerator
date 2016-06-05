@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.xls.test.model;
+package com.github.decioamador.jdocsgen.table.test;
 
 import java.util.Date;
 

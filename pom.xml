@@ -117,9 +117,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<excludePackageNames>com.github.decioamador.jdocsgen.excel.test</excludePackageNames>
-				</configuration>
 			</plugin>
 
 			<!-- Release Deployment with the Maven Release Plugin -->

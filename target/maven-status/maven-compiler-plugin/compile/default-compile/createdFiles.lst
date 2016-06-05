@@ -1,4 +1,3 @@
-com\github\decioamador\jdocsgen\xls\model\XlsOptionP.class
-com\github\decioamador\jdocsgen\xls\XlsGeneratorP$1.class
-com\github\decioamador\jdocsgen\xls\XlsGenerator.class
-com\github\decioamador\jdocsgen\xls\XlsGeneratorP.class
+com\github\decioamador\jdocsgen\table\TableOption.class
+com\github\decioamador\jdocsgen\table\TableGenerator$1.class
+com\github\decioamador\jdocsgen\table\TableGenerator.class
