@@ -1,3 +1,5 @@
-com\github\decioamador\jdocsgen\table\TableOption.class
-com\github\decioamador\jdocsgen\table\TableGenerator$1.class
-com\github\decioamador\jdocsgen\table\TableGenerator.class
+com\github\decioamador\jdocsgen\table\TableGeneratorP$1.class
+com\github\decioamador\jdocsgen\table\TableGeneratorP$Options.class
+com\github\decioamador\jdocsgen\table\TableOptionP.class
+com\github\decioamador\jdocsgen\table\TableGeneratorP.class
+com\github\decioamador\jdocsgen\text\TextGeneratorP.class

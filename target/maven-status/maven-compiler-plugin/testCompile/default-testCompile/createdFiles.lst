@@ -1,4 +1,5 @@
-com\github\decioamador\jdocsgen\table\test\Model3.class
-com\github\decioamador\jdocsgen\table\test\Test.class
-com\github\decioamador\jdocsgen\table\test\Model2.class
-com\github\decioamador\jdocsgen\table\test\Model1.class
+com\github\decioamador\jdocsgen\test\Model2.class
+com\github\decioamador\jdocsgen\test\table\TableGeneratorPTest.class
+com\github\decioamador\jdocsgen\test\Model1.class
+com\github\decioamador\jdocsgen\test\text\TextGeneratorPTest.class
+com\github\decioamador\jdocsgen\test\Model3.class

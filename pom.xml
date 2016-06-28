@@ -4,7 +4,7 @@
 
 	<groupId>com.github.decioamador</groupId>
 	<artifactId>jdocuments-generator</artifactId>
-	<version>1.0.0.0</version>
+	<version>1.1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Jdocuments-generator</name>
@@ -49,6 +49,7 @@
 
 	<build>
 		<plugins>
+		
 			<!-- Compiler version -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -145,10 +146,16 @@
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.13</version>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.14</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports</artifactId>
+		    <version>6.1.0</version>
 		</dependency>
 	</dependencies>
 
-	<description>The objective of this is to generate documents based on model classes.</description>
+	<description>The objective is to generate documents.</description>
 </project>
