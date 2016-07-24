@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import com.github.decioamador.jdocsgen.Constants;
 import com.github.decioamador.jdocsgen.JDocsGenException;
@@ -21,7 +23,23 @@ import com.github.decioamador.jdocsgen.translation.TranslatorHelper;
 /**
  * This class has the purpose of generating text
  * 
+ * <br>
+ * <br>Copyright 2016 Décio Amador <br>
+ * <br>
+ * Licensed under the Apache License, Version 2.0 (the "License"); <br>
+ * you may not use this file except in compliance with the License. <br>
+ * You may obtain a copy of the License at <br>
+ * <br>
+ *     http://www.apache.org/licenses/LICENSE-2.0 <br>
+ * <br>
+ * Unless required by applicable law or agreed to in writing, software <br>
+ * distributed under the License is distributed on an "AS IS" BASIS, <br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
+ * See the License for the specific language governing permissions and <br>
+ * limitations under the License. <br>
+ * 
  * @author Décio Amador
+ * @since 1.1.0.0
  */
 public class TextGenerator implements Closeable, AutoCloseable{
 
@@ -116,11 +134,77 @@ public class TextGenerator implements Closeable, AutoCloseable{
 				run = paragraph.createRun();
 				run.setText(TranslatorHelper.getValue(o, fields.get(i), translator));
 				run.addBreak();
-				run.addBreak();
+				if(options.isAddBreakLineBeetweenLines()){
+					run.addBreak();
+				}
 			}
 		}
 		
 		return paragraph;
+	}
+	
+	public XWPFTable generateTable(final List<?> objs,
+			final List<String> columns,final List<String> fields,
+			final TranslatorCollection translator) throws JDocsGenException {
+		int i;
+		String [] mthds;
+		boolean going;
+		
+		Object o;
+		Class<?> clazz, temp;
+		Method m;
+		
+		XWPFTable table = document.createTable();
+		XWPFTableRow row;
+		
+		row = table.getRow(0);
+		for(int w=0;w<columns.size();w++){
+			if(w==0){
+				row.getCell(0).setText(columns.get(w));
+			} else {
+				row.addNewTableCell().setText(columns.get(w));
+			}
+		}
+		
+		for(final Object obj : objs){
+			if(obj != null){
+				clazz = obj.getClass();
+				row = table.createRow();
+				for(int w=0;w<columns.size();w++){
+					mthds = fields.get(0).split("[.]");
+					temp = clazz;
+					o = obj;
+					i = 0;
+					going = true;
+					while(i<mthds.length && going){
+						try {
+							m = temp.getDeclaredMethod(Constants.GET+mthds[i],
+									Constants.EMPTY_ARRAY_CLASS);
+						} catch (NoSuchMethodException | SecurityException e) {
+							throw new JDocsGenException(e);
+						}
+						if(m != null){
+							try {
+								o = m.invoke(o, Constants.EMPTY_ARRAY_OBJECT);
+							} catch (IllegalAccessException 
+									| InvocationTargetException 
+									| IllegalArgumentException e) {
+								throw new JDocsGenException(e);
+							}
+							if(o != null){
+								temp = o.getClass();
+							} else {
+								going = false;
+							}
+						}
+						i++;
+					}
+					row.getCell(w).setText(TranslatorHelper.getValue(o, fields.get(0), translator));
+				}
+			}
+		}
+		
+		return table;
 	}
 
 	/**
@@ -133,7 +217,7 @@ public class TextGenerator implements Closeable, AutoCloseable{
 	 * @since 1.1.0.0
 	 */
 	public ByteArrayInputStream write() throws IOException{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		document.write(bos);
 		return new ByteArrayInputStream(bos.toByteArray());
 	}
@@ -141,15 +225,15 @@ public class TextGenerator implements Closeable, AutoCloseable{
 	/**
 	 * Writes the generated document on the stream, writing on the existing one
 	 * 
-	 * @param os
+	 * @param outputStream
 	 *            OutputStream that will have the content
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
 	 * @since 1.1.0.0
 	 */
-	public void write(OutputStream os) throws IOException{
-		document.write(os);
+	public void write(final OutputStream outputStream) throws IOException{
+		document.write(outputStream);
 	}
 
 	/**

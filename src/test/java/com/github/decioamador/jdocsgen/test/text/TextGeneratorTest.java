@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class TextGeneratorTest {
 
 	public static void main(String[] args) throws Exception {
 		final String filename = "test.docx";
+		final String filename2 = "test2.docx";
 		
 		final List<String> labels = Arrays.asList(
 				"Referencia","Data","Id","Nome",
@@ -54,24 +56,37 @@ public class TextGeneratorTest {
 		final Model1 obj2 = new Model1("guid2", 222L, new Date(), "time", null);
 		final Model1 obj3 = new Model1("guid3", 333L, new Date(), "life", 
 				new Model2("guidMD3","label3", new Model3("guidMDMD3", 3)));
-		final Model1 obj4 = new Model1("guid4", 444L, new Date(), "hope", 
+		final Model1 obj4 = new Model1("guid4", 444L, null, "hope", 
 				new Model2("guidMD4","label4", new Model3(null, 4)));
+		
+		final List<Model1> objs = new ArrayList<>();
+		objs.add(obj);
+		objs.add(obj2);
+		objs.add(obj3);
+		objs.add(obj4);
 		
 		final TextOptions options = new TextOptions();
 		options.setBetweenLabelAndField(" - ");
+		options.setAddBreakLineBeetweenLines(false);
 		
 		final Map<String,Format> formats = new HashMap<>();
 		formats.put("Date", new SimpleDateFormat("dd/MM/yyyy"));
 		translator.setFieldsToFormat(formats);
 		
-		final XWPFDocument document = new XWPFDocument();
-		
+		XWPFDocument document = new XWPFDocument();
 		try(TextGenerator tg = new TextGenerator(document); 
 				OutputStream os = new FileOutputStream(new File(filename))){
 			tg.generate(obj, options, labels, fields, translator);
 			tg.generate(obj2, options, labels, fields, translator);
 			tg.generate(obj3, options, labels, fields, translator);
 			tg.generate(obj4, options, labels, fields, translator);
+			tg.write(os);
+		}
+		
+		document = new XWPFDocument();
+		try(TextGenerator tg = new TextGenerator(document);
+				OutputStream os = new FileOutputStream(new File(filename2))){
+			tg.generateTable(objs, labels, fields, translator);
 			tg.write(os);
 		}
 	}
