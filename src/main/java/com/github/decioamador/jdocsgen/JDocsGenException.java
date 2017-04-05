@@ -2,81 +2,65 @@ package com.github.decioamador.jdocsgen;
 
 /**
  * This class is a dedicated exception of JDocsGen
- * 
- * <br>
- * <br>Copyright 2016 Décio Amador <br>
- * <br>
- * Licensed under the Apache License, Version 2.0 (the "License"); <br>
- * you may not use this file except in compliance with the License. <br>
- * You may obtain a copy of the License at <br>
- * <br>
- *     http://www.apache.org/licenses/LICENSE-2.0 <br>
- * <br>
- * Unless required by applicable law or agreed to in writing, software <br>
- * distributed under the License is distributed on an "AS IS" BASIS, <br>
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
- * See the License for the specific language governing permissions and <br>
- * limitations under the License. <br>
- * 
- * @author  Décio Amador
- * @since   1.1.0.0
+ *
+ * @since 1.1.0.0
  */
-public class JDocsGenException extends Exception{
+public final class JDocsGenException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
-     * Constructs a new exception with {@code null} as its detail message.
-     * The cause is not initialized, and may subsequently be initialized by a
-     * call to {@link #initCause}.
-     */
+	 * Constructs a new exception with {@code null} as its detail message.
+	 * The cause is not initialized, and may subsequently be initialized by a
+	 * call to {@link #initCause}.
+	 */
 	public JDocsGenException() {
 		super();
 	}
 
 	/**
-     * Constructs a new exception with the specified detail message and
-     * cause.  <p>Note that the detail message associated with
-     * {@code cause} is <i>not</i> automatically incorporated in
-     * this exception's detail message.
-     *
-     * @param  message the detail message (which is saved for later retrieval
-     *         by the {@link #getMessage()} method).
-     * @param  cause the cause (which is saved for later retrieval by the
-     *         {@link #getCause()} method).  (A <tt>null</tt> value is
-     *         permitted, and indicates that the cause is nonexistent or
-     *         unknown.)
-     */
-	public JDocsGenException(String message, Throwable cause) {
+	 * Constructs a new exception with the specified detail message and
+	 * cause.  <p>Note that the detail message associated with
+	 * {@code cause} is <i>not</i> automatically incorporated in
+	 * this exception's detail message.
+	 *
+	 * @param  message the detail message (which is saved for later retrieval
+	 *         by the {@link #getMessage()} method).
+	 * @param  cause the cause (which is saved for later retrieval by the
+	 *         {@link #getCause()} method).  (A <tt>null</tt> value is
+	 *         permitted, and indicates that the cause is nonexistent or
+	 *         unknown.)
+	 */
+	public JDocsGenException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-     * Constructs a new exception with the specified detail message.  The
-     * cause is not initialized, and may subsequently be initialized by
-     * a call to {@link #initCause}.
-     *
-     * @param   message   the detail message. The detail message is saved for
-     *          later retrieval by the {@link #getMessage()} method.
-     */
-	public JDocsGenException(String message) {
+	 * Constructs a new exception with the specified detail message.  The
+	 * cause is not initialized, and may subsequently be initialized by
+	 * a call to {@link #initCause}.
+	 *
+	 * @param   message   the detail message. The detail message is saved for
+	 *          later retrieval by the {@link #getMessage()} method.
+	 */
+	public JDocsGenException(final String message) {
 		super(message);
 	}
 
 	/**
-     * Constructs a new exception with the specified cause and a detail
-     * message of <tt>(cause==null ? null : cause.toString())</tt> (which
-     * typically contains the class and detail message of <tt>cause</tt>).
-     * This constructor is useful for exceptions that are little more than
-     * wrappers for other throwables (for example, {@link
-     * java.security.PrivilegedActionException}).
-     *
-     * @param  cause the cause (which is saved for later retrieval by the
-     *         {@link #getCause()} method).  (A <tt>null</tt> value is
-     *         permitted, and indicates that the cause is nonexistent or
-     *         unknown.)
-     */
-	public JDocsGenException(Throwable cause) {
+	 * Constructs a new exception with the specified cause and a detail
+	 * message of <tt>(cause==null ? null : cause.toString())</tt> (which
+	 * typically contains the class and detail message of <tt>cause</tt>).
+	 * This constructor is useful for exceptions that are little more than
+	 * wrappers for other throwables (for example, {@link
+	 * java.security.PrivilegedActionException}).
+	 *
+	 * @param  cause the cause (which is saved for later retrieval by the
+	 *         {@link #getCause()} method).  (A <tt>null</tt> value is
+	 *         permitted, and indicates that the cause is nonexistent or
+	 *         unknown.)
+	 */
+	public JDocsGenException(final Throwable cause) {
 		super(cause);
 	}
 

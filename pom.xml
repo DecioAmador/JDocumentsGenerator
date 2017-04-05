@@ -9,6 +9,7 @@
 
 	<name>Jdocuments-generator</name>
 	<url>https://github.com/DecioAmador/Jdocuments-generator</url>
+	<description>The objective is to generate documents.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,6 +29,10 @@
 			<email>decio.amador@hotmail.com</email>
 		</developer>
 	</developers>
+	
+	<issueManagement>
+		<url>https://github.com/DecioAmador/Jdocuments-generator/issues</url>
+	</issueManagement>
 
 	<scm>
 		<connection>scm:git:git@github.com:DecioAmador/Jdocuments-generator.git</connection>
@@ -103,6 +108,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<show>private</show>
+					<sourceFileIncludes>
+						<include>**/org/apache/poi/**/*.java</include>
+					</sourceFileIncludes>
+					</configuration>
 			</plugin>
 
 			<!-- Javadoc Attachments -->
@@ -149,13 +160,6 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.14</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>6.1.0</version>
-		</dependency>
 	</dependencies>
 
-	<description>The objective is to generate documents.</description>
 </project>

@@ -4,25 +4,25 @@ import java.util.Date;
 
 public class Model1 {
 
-	private String guid;
+	private String uuid;
 	private Date date;
 	private Long id;
 	private String name;
 	private Model2 model2;
 	
-	public Model1(String guid, Long id, Date date, String name, Model2 model2){
-		this.guid = guid;
+	public Model1(String uuid, Long id, Date date, String name, Model2 model2){
+		this.uuid = uuid;
 		this.id = id;
 		this.date = date;
 		this.name = name;
 		this.model2 = model2;
 	}
 	
-	public String getGuid() {
-		return guid;
+	public String getUuid() {
+		return uuid;
 	}
-	public void setGuid(String guid) {
-		this.guid = guid;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	public Date getDate() {
 		return date;

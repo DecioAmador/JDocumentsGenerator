@@ -2,19 +2,19 @@ package com.github.decioamador.jdocsgen.test;
 
 public class Model3 {
 
-	private String guid;
+	private String uuid;
 	private Integer number;
 	
-	public Model3(String guid, Integer number) {
-		this.guid = guid;
+	public Model3(String uuid, Integer number) {
+		this.uuid = uuid;
 		this.number = number;
 	}
 
-	public String getGuid() {
-		return guid;
+	public String getUuid() {
+		return uuid;
 	}
-	public void setGuid(String guid) {
-		this.guid = guid;
+	public void setUuid(String guid) {
+		this.uuid = guid;
 	}
 	public Integer getNumber() {
 		return number;

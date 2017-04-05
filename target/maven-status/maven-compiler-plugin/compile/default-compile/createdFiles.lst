@@ -1,5 +1,9 @@
-com\github\decioamador\jdocsgen\table\TableGeneratorP$1.class
-com\github\decioamador\jdocsgen\table\TableGeneratorP$Options.class
-com\github\decioamador\jdocsgen\table\TableOptionP.class
-com\github\decioamador\jdocsgen\table\TableGeneratorP.class
-com\github\decioamador\jdocsgen\text\TextGeneratorP.class
+com\github\decioamador\jdocsgen\translation\TranslatorHelper.class
+com\github\decioamador\jdocsgen\table\TableOptions.class
+com\github\decioamador\jdocsgen\table\TableGenerator.class
+com\github\decioamador\jdocsgen\translation\TranslatorCollection.class
+com\github\decioamador\jdocsgen\utils\Constants.class
+com\github\decioamador\jdocsgen\text\TextGenerator.class
+com\github\decioamador\jdocsgen\text\TextOptions.class
+com\github\decioamador\jdocsgen\JDocsGenException.class
+com\github\decioamador\jdocsgen\utils\FieldResolution.class

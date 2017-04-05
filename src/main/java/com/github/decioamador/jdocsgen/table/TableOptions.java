@@ -1,118 +1,141 @@
 package com.github.decioamador.jdocsgen.table;
 
-import java.io.Serializable;
-import java.text.DateFormat;
-
 import org.apache.poi.ss.usermodel.CellStyle;
 
 /**
  * Options of the {@link TableGenerator}
- * 
- * <br>
- * <br>Copyright 2016 Décio Amador <br>
- * <br>
- * Licensed under the Apache License, Version 2.0 (the "License"); <br>
- * you may not use this file except in compliance with the License. <br>
- * You may obtain a copy of the License at <br>
- * <br>
- *     http://www.apache.org/licenses/LICENSE-2.0 <br>
- * <br>
- * Unless required by applicable law or agreed to in writing, software <br>
- * distributed under the License is distributed on an "AS IS" BASIS, <br>
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
- * See the License for the specific language governing permissions and <br>
- * limitations under the License. <br>
- * 
- * @author Décio Amador
+ *
  * @since 1.0.0.0
  */
-public class TableOptions implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
+public class TableOptions {
+
 	/**
-	 * <b>Expected type:</b> Integer <br> 
-	 * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br> 
+	 * <b>Expected type:</b> {@link Integer} <br>
+	 * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
 	 * <b>Default:</b> 0 - first row
+	 *
 	 * @since 1.0.0.0
 	 */
 	private int initPosRow = 0;
-	
+
 	/**
-	 * <b>Expected type:</b> Integer <br> 
-	 * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br> 
+	 * <b>Expected type:</b> {@link Integer} <br>
+	 * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
 	 * <b>Default:</b> 0 - first column
+	 *
 	 * @since 1.0.0.0
 	 */
 	private int initPosCol = 0;
-	
+
 	/**
-	 * <b>Expected type:</b> Boolean <br> 
-	 * <b>Meaning:</b> If columns will be auto size <br> 
+	 * <b>Expected type:</b> {@link Boolean} <br>
+	 * <b>Meaning:</b> If columns will be auto size <br>
 	 * <b>Default:</b> false
+	 *
 	 * @since 1.0.0.0
 	 */
 	private boolean autosize = false;
-	
+
 	/**
-	 * <b>Expected type:</b> org.apache.poi.ss.usermodel.CellStyle <br> 
-	 * <b>Meaning:</b> Cell style applied to columns <br> 
-	 * <b>Default:</b> none
+	 * <b>Expected type:</b> {@link CellStyle} <br>
+	 * <b>Meaning:</b> Cell style applied to columns <br>
+	 * <b>Default:</b> null
+	 *
 	 * @since 1.1.0.0
 	 */
 	private CellStyle columnsStyle;
-	
+
 	/**
-	 * <b>Expected type:</b> org.apache.poi.ss.usermodel.CellStyle <br> 
-	 * <b>Meaning:</b> Cell style applied to fields <br> 
-	 * <b>Default:</b> none
+	 * <b>Expected type:</b> {@link CellStyle} <br>
+	 * <b>Meaning:</b> Cell style applied to fields <br>
+	 * <b>Default:</b> null
+	 *
 	 * @since 1.1.0.0
 	 */
 	private CellStyle fieldsStyle;
-	
-	public TableOptions(){
-		super();
-	}
-	
-	public TableOptions(int initPosRow, int initPosCol, boolean autosize, DateFormat dateFormat, CellStyle columnsStyle,
-			CellStyle fieldsStyle) {
-		super();
-		this.initPosRow = initPosRow;
-		this.initPosCol = initPosCol;
-		this.autosize = autosize;
-		this.columnsStyle = columnsStyle;
-		this.fieldsStyle = fieldsStyle;
-	}
 
-	// GET'S and SET'S
+	/**
+	 * @return the initial position of the row
+	 * @see TableOptions#initPosRow
+	 */
 	public int getInitPosRow() {
 		return initPosRow;
 	}
-	public void setInitPosRow(int initPosRow) {
+
+	/**
+	 * @param initPosRow
+	 *            the initial position of the row
+	 * @see TableOptions#initPosRow
+	 */
+	public void setInitPosRow(final int initPosRow) {
 		this.initPosRow = initPosRow;
 	}
+
+	/**
+	 * @return the initial position of the column
+	 * @see TableOptions#initPosCol
+	 */
 	public int getInitPosCol() {
 		return initPosCol;
 	}
-	public void setInitPosCol(int initPosCol) {
+
+	/**
+	 * @param initPosCol
+	 *            the initial position of the column
+	 * @see TableOptions#initPosCol
+	 */
+	public void setInitPosCol(final int initPosCol) {
 		this.initPosCol = initPosCol;
 	}
+
+	/**
+	 * @return if the columns will be auto size
+	 * @see TableOptions#autosize
+	 */
 	public boolean isAutosize() {
 		return autosize;
 	}
-	public void setAutosize(boolean autosize) {
+
+	/**
+	 * @param autosize
+	 *            if the columns will be autosize
+	 * @see TableOptions#autosize
+	 */
+	public void setAutosize(final boolean autosize) {
 		this.autosize = autosize;
 	}
+
+	/**
+	 * @return the cell style being used on the titles
+	 * @see TableOptions#columnsStyle
+	 */
 	public CellStyle getColumnsStyle() {
 		return columnsStyle;
 	}
-	public void setColumnsStyle(CellStyle columnsStyle) {
+
+	/**
+	 * @param columnsStyle
+	 *            the cell style being used on the titles
+	 * @see TableOptions#columnsStyle
+	 */
+	public void setColumnsStyle(final CellStyle columnsStyle) {
 		this.columnsStyle = columnsStyle;
 	}
+
+	/**
+	 * @return the cell style being used on the rest of cells
+	 * @see TableOptions#fieldsStyle
+	 */
 	public CellStyle getFieldsStyle() {
 		return fieldsStyle;
 	}
-	public void setFieldsStyle(CellStyle fieldsStyle) {
+
+	/**
+	 * @param fieldsStyle
+	 *            the cell style being used on the rest of the cells
+	 * @see TableOptions#fieldsStyle
+	 */
+	public void setFieldsStyle(final CellStyle fieldsStyle) {
 		this.fieldsStyle = fieldsStyle;
 	}
 }

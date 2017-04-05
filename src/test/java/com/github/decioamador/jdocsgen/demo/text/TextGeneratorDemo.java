@@ -1,5 +1,6 @@
-package com.github.decioamador.jdocsgen.test.text;
+package com.github.decioamador.jdocsgen.demo.text;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -23,69 +25,68 @@ import com.github.decioamador.jdocsgen.text.TextGenerator;
 import com.github.decioamador.jdocsgen.text.TextOptions;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 
-public class TextGeneratorTest {
+public class TextGeneratorDemo {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 		final String filename = "test.docx";
 		final String filename2 = "test2.docx";
-		
+
 		final List<String> labels = Arrays.asList(
 				"Referencia","Data","Id","Nome",
-				"Guid2","Rotulo","Guid3","Numero"); // PT
-		
+				"Uuid2","Rotulo","Uuid3","Numero"); // PT
+
 		final List<String> fields = Arrays.asList(
-				"Guid","Date","Id","Name",
-				"Model2.Guid","Model2.Label",
-				"Model2.Model3.Guid","Model2.Model3.Number");
-		
+				"uuid","date","id","name",
+				"model2.uuid","model2.label",
+				"model2.model3.uuid","model2.model3.number");
+
 		final TranslatorCollection translator = new TranslatorCollection();
-		
+
 		final Map<String,String> fieldsToMap = new HashMap<>(); // EN to PT
 		fieldsToMap.put("people","pessoas");
 		fieldsToMap.put("life","vida");
 		fieldsToMap.put("time","tempo");
 		fieldsToMap.put("world","mundo");
 		translator.setMap(fieldsToMap);
-		
+
 		final Set<String> map = new HashSet<>();
-		map.add("Name");
+		map.add("name");
 		translator.setFieldsToMap(map);
-		
-		final Model1 obj = new Model1("guid1", 111L, new Date(), "people", 
-				new Model2("guidMD1","label1", new Model3("guidMDMD1", 1)));
-		final Model1 obj2 = new Model1("guid2", 222L, new Date(), "time", null);
-		final Model1 obj3 = new Model1("guid3", 333L, new Date(), "life", 
-				new Model2("guidMD3","label3", new Model3("guidMDMD3", 3)));
-		final Model1 obj4 = new Model1("guid4", 444L, null, "hope", 
-				new Model2("guidMD4","label4", new Model3(null, 4)));
-		
+
 		final List<Model1> objs = new ArrayList<>();
+		Model1 obj = new Model1(UUID.randomUUID().toString(), 111L, new Date(), "people",
+				new Model2(UUID.randomUUID().toString(),"label1", new Model3(UUID.randomUUID().toString(), 1)));
 		objs.add(obj);
-		objs.add(obj2);
-		objs.add(obj3);
-		objs.add(obj4);
-		
+		obj = new Model1(UUID.randomUUID().toString(), 222L, new Date(), "time", null);
+		objs.add(obj);
+		obj = new Model1(UUID.randomUUID().toString(), 333L, new Date(), "life",
+				new Model2(UUID.randomUUID().toString(),"label3", new Model3(UUID.randomUUID().toString(), 3)));
+		objs.add(obj);
+		obj = new Model1(UUID.randomUUID().toString(), 444L, null, "hope",
+				new Model2(UUID.randomUUID().toString(),"label4", new Model3(null, 4)));
+		objs.add(obj);
+
 		final TextOptions options = new TextOptions();
 		options.setBetweenLabelAndField(" - ");
-		options.setAddBreakLineBeetweenLines(false);
-		
+
 		final Map<String,Format> formats = new HashMap<>();
-		formats.put("Date", new SimpleDateFormat("dd/MM/yyyy"));
+		formats.put("date", new SimpleDateFormat("yyyy-MM-dd"));
 		translator.setFieldsToFormat(formats);
-		
+
 		XWPFDocument document = new XWPFDocument();
-		try(TextGenerator tg = new TextGenerator(document); 
-				OutputStream os = new FileOutputStream(new File(filename))){
-			tg.generate(obj, options, labels, fields, translator);
-			tg.generate(obj2, options, labels, fields, translator);
-			tg.generate(obj3, options, labels, fields, translator);
-			tg.generate(obj4, options, labels, fields, translator);
+		try(TextGenerator tg = new TextGenerator(document);
+				OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(filename)))){
+
+			for(final Object o : objs){
+				tg.generateParagraph(o, options, labels, fields, translator);
+			}
+
 			tg.write(os);
 		}
-		
+
 		document = new XWPFDocument();
 		try(TextGenerator tg = new TextGenerator(document);
-				OutputStream os = new FileOutputStream(new File(filename2))){
+				OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(filename2)))){
 			tg.generateTable(objs, labels, fields, translator);
 			tg.write(os);
 		}
