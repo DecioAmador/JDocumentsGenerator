@@ -5,9 +5,9 @@ package com.github.decioamador.jdocsgen;
  *
  * @since 1.1.0.0
  */
-public final class JDocsGenException extends RuntimeException {
+public class JDocsGenException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7845081259671558997L;
 
 	/**
 	 * Constructs a new exception with {@code null} as its detail message.

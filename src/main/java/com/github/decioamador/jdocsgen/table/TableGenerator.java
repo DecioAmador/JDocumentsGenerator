@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.github.decioamador.jdocsgen.JDocsGenException;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 import com.github.decioamador.jdocsgen.translation.TranslatorHelper;
 import com.github.decioamador.jdocsgen.utils.FieldResolution;
@@ -53,7 +54,7 @@ public class TableGenerator implements AutoCloseable {
 	 * @return the sheet being used
 	 * @since 1.0.0.0
 	 */
-	public Sheet generateSheet(final String sheetName,
+	public Sheet generateTable(final String sheetName,
 			final TableOptions options, final Collection<?> objs,
 			final List<String> columns, final List<String> fields,
 			final TranslatorCollection translator) {
@@ -72,7 +73,7 @@ public class TableGenerator implements AutoCloseable {
 	 *            Options to generate this table
 	 * @param objs
 	 *            Objects that will be the lines
-	 * @param columns
+	 * @param titles
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
@@ -80,23 +81,23 @@ public class TableGenerator implements AutoCloseable {
 	 *            A collection used to translate
 	 * @since 1.0.0.0
 	 */
-	public void generateTable(final Sheet sheet,
-			final TableOptions options, final Collection<?> objs,
-			final List<String> columns, final List<String> fields,
-			final TranslatorCollection translator) {
+	public void generateTable(Sheet sheet, final TableOptions options,
+			final Collection<?> objs, final List<String> titles,
+			final List<String> fields, final TranslatorCollection translator) {
 
 		int rowNum = options.getInitPosRow(), columnNum = options.getInitPosCol();
 		Class<?> clazz;
 		Object o;
 
+		sheet = checkSheet(sheet);
 		Cell cell;
 		Row row;
 
 		row = sheet.createRow(rowNum++);
-		for(final String column : columns){
+		for(final String column : titles){
 			cell = row.createCell(columnNum++);
 			cell.setCellValue(column);
-			cell.setCellStyle(options.getColumnsStyle());
+			cell.setCellStyle(options.getTitlesStyle());
 		}
 
 		for(final Object obj : objs){
@@ -118,6 +119,25 @@ public class TableGenerator implements AutoCloseable {
 				sheet.autoSizeColumn(j);
 			}
 		}
+	}
+
+	/**
+	 * Checks if the sheet is correct and creates in case that's null
+	 *
+	 * @param sheet
+	 *            sheet to check
+	 * @return a valid sheet
+	 */
+	private Sheet checkSheet(final Sheet sheet){
+		Sheet result;
+		if(sheet == null){
+			result = workbook.createSheet();
+		} else if(workbook.getSheet(sheet.getSheetName()) == null){
+			throw new JDocsGenException("The sheet is not from this workbook.");
+		} else {
+			result = sheet;
+		}
+		return result;
 	}
 
 	/**

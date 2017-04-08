@@ -110,10 +110,7 @@
 				</executions>
 				<configuration>
 					<show>private</show>
-					<sourceFileIncludes>
-						<include>**/org/apache/poi/**/*.java</include>
-					</sourceFileIncludes>
-					</configuration>
+				</configuration>
 			</plugin>
 
 			<!-- Javadoc Attachments -->

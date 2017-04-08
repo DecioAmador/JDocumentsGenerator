@@ -21,9 +21,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.github.decioamador.jdocsgen.table.TableGenerator;
 import com.github.decioamador.jdocsgen.table.TableOptions;
-import com.github.decioamador.jdocsgen.test.Model1;
-import com.github.decioamador.jdocsgen.test.Model2;
-import com.github.decioamador.jdocsgen.test.Model3;
+import com.github.decioamador.jdocsgen.test.model.Model1;
+import com.github.decioamador.jdocsgen.test.model.Model2;
+import com.github.decioamador.jdocsgen.test.model.Model3;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 
 public class TableGeneratorDemo {
@@ -89,8 +89,8 @@ public class TableGeneratorDemo {
 
 		try(TableGenerator tg = new TableGenerator(wb);
 				OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(filename)))){
-			tg.generateSheet("Sheet Name 1", options, objs, columns, fields, translator);
-			tg.generateSheet("Sheet Name 2", options, objs2, columns, fields, translator);
+			tg.generateTable("Sheet Name 1", options, objs, columns, fields, translator);
+			tg.generateTable("Sheet Name 2", options, objs2, columns, fields, translator);
 			tg.write(os);
 		}
 	}

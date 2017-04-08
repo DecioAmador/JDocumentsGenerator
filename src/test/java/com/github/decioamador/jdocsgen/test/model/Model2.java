@@ -1,4 +1,4 @@
-package com.github.decioamador.jdocsgen.test;
+package com.github.decioamador.jdocsgen.test.model;
 
 public class Model2 {
 	

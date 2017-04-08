@@ -5,7 +5,7 @@ package com.github.decioamador.jdocsgen.utils;
  *
  * @since 1.1.0.0
  */
-public final class Constants {
+public class Constants {
 
 	public static final String EMPTY_STRING = "";
 	public static final String GET = "get";

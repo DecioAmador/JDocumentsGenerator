@@ -89,7 +89,7 @@ public class TextGenerator implements AutoCloseable {
 	 *
 	 * @param objs
 	 *            Objects that will be the lines
-	 * @param columns
+	 * @param titles
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
@@ -99,7 +99,7 @@ public class TextGenerator implements AutoCloseable {
 	 * @since 1.1.0.0
 	 */
 	public XWPFTable generateTable(final Collection<?> objs,
-			final List<String> columns, final List<String> fields,
+			final List<String> titles, final List<String> fields,
 			final TranslatorCollection translator) {
 
 		int rowNum = 0;
@@ -107,11 +107,11 @@ public class TextGenerator implements AutoCloseable {
 		Class<?> clazz;
 		String field;
 
-		final XWPFTable table = document.createTable(objs.size()+1, columns.size());
+		final XWPFTable table = document.createTable(objs.size()+1, titles.size());
 		XWPFTableRow row = table.getRow(rowNum++);
 
-		for(int i=0;i<columns.size();i++){
-			row.getCell(i).setText(columns.get(i));
+		for(int i=0;i<titles.size();i++){
+			row.getCell(i).setText(titles.get(i));
 		}
 
 		for(final Object obj : objs){
@@ -119,7 +119,7 @@ public class TextGenerator implements AutoCloseable {
 				clazz = obj.getClass();
 				row = table.getRow(rowNum++);
 
-				for(int i=0;i<columns.size();i++){
+				for(int i=0;i<fields.size();i++){
 					field = fields.get(i);
 					o = FieldResolution.resolveField(clazz, obj, field);
 					row.getCell(i).setText(TranslatorHelper.getValue(o, field, translator));

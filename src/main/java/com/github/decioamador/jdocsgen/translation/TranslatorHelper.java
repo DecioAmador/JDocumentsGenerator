@@ -8,6 +8,7 @@ import com.github.decioamador.jdocsgen.utils.Constants;
 
 /**
  * Helper class to translate fields
+ *
  * @since 1.1.0.0
  */
 public class TranslatorHelper {
@@ -61,25 +62,23 @@ public class TranslatorHelper {
 		Object temp = obj;
 		String result = null;
 
-		if(trans != null){
-			if (trans.getFieldsToResources() != null && trans.getResourceBundle() != null
-					&& trans.getFieldsToResources().contains(field)) {
-				try {
-					result = trans.getResourceBundle().getString(temp.toString());
-				} catch (MissingResourceException | ClassCastException e) {}
+		if (trans.getFieldsToResources() != null && trans.getResourceBundle() != null
+				&& trans.getFieldsToResources().contains(field)) {
+			try {
+				result = trans.getResourceBundle().getString(temp.toString());
+			} catch (MissingResourceException | ClassCastException e) {}
 
-			} else if (trans.getFieldsToFormat() != null && trans.getFieldsToFormat().keySet().contains(field)) {
-				if(temp instanceof Calendar){
-					temp = ((Calendar) temp).getTime();
-				}
-				result = trans.getFieldsToFormat().get(field).format(temp);
-
-			} else if (trans.getDatesToFormat() != null && trans.getDatesToFormat().keySet().contains(field)) {
-				result = trans.getDatesToFormat().get(field).format((TemporalAccessor) temp);
-
-			} else if (trans.getFieldsToMap() != null && trans.getMap() != null && trans.getFieldsToMap().contains(field)) {
-				result = trans.getMap().get(temp.toString());
+		} else if (trans.getFieldsToFormat() != null && trans.getFieldsToFormat().containsKey(field)) {
+			if(temp instanceof Calendar){
+				temp = ((Calendar) temp).getTime();
 			}
+			result = trans.getFieldsToFormat().get(field).format(temp);
+
+		} else if (trans.getDatesToFormat() != null && trans.getDatesToFormat().containsKey(field)) {
+			result = trans.getDatesToFormat().get(field).format((TemporalAccessor) temp);
+
+		} else if (trans.getMap() != null && trans.getFieldsToMap() != null && trans.getFieldsToMap().contains(field)) {
+			result = trans.getMap().get(temp.toString());
 		}
 
 		return result;

@@ -38,12 +38,12 @@ public class TableOptions {
 
 	/**
 	 * <b>Expected type:</b> {@link CellStyle} <br>
-	 * <b>Meaning:</b> Cell style applied to columns <br>
+	 * <b>Meaning:</b> Cell style applied to titles <br>
 	 * <b>Default:</b> null
 	 *
 	 * @since 1.1.0.0
 	 */
-	private CellStyle columnsStyle;
+	private CellStyle titlesStyle;
 
 	/**
 	 * <b>Expected type:</b> {@link CellStyle} <br>
@@ -107,19 +107,19 @@ public class TableOptions {
 
 	/**
 	 * @return the cell style being used on the titles
-	 * @see TableOptions#columnsStyle
+	 * @see TableOptions#titlesStyle
 	 */
-	public CellStyle getColumnsStyle() {
-		return columnsStyle;
+	public CellStyle getTitlesStyle() {
+		return titlesStyle;
 	}
 
 	/**
-	 * @param columnsStyle
+	 * @param titlesStyle
 	 *            the cell style being used on the titles
-	 * @see TableOptions#columnsStyle
+	 * @see TableOptions#titlesStyle
 	 */
-	public void setColumnsStyle(final CellStyle columnsStyle) {
-		this.columnsStyle = columnsStyle;
+	public void setTitlesStyle(final CellStyle titlesStyle) {
+		this.titlesStyle = titlesStyle;
 	}
 
 	/**

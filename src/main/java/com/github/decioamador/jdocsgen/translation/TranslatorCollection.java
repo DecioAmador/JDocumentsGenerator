@@ -40,11 +40,10 @@ public class TranslatorCollection {
 		this.fieldsToFormat = fieldsToFormat;
 	}
 
-	public TranslatorCollection(final Set<String> fieldsToMap, final Map<String, String> map,
+	public TranslatorCollection(final Map<String, String> map,
 			final Set<String> fieldsToResources, final ResourceBundle resourceBundle,
 			final Map<String, Format> fieldsToFormat, final Map<String, DateTimeFormatter> datesToFormat) {
 		super();
-		this.fieldsToMap = fieldsToMap;
 		this.map = map;
 		this.fieldsToResources = fieldsToResources;
 		this.resourceBundle = resourceBundle;

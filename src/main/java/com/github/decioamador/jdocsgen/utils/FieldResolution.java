@@ -7,9 +7,10 @@ import com.github.decioamador.jdocsgen.JDocsGenException;
 
 /**
  * This class has the purpose of generating text
+ *
  * @since 1.1.0.0
  */
-public final class FieldResolution {
+public class FieldResolution {
 
 	private FieldResolution(){
 		// It isn't supposed to create an instance of this class

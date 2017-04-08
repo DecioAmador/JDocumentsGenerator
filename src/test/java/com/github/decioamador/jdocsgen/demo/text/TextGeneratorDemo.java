@@ -18,9 +18,9 @@ import java.util.UUID;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import com.github.decioamador.jdocsgen.test.Model1;
-import com.github.decioamador.jdocsgen.test.Model2;
-import com.github.decioamador.jdocsgen.test.Model3;
+import com.github.decioamador.jdocsgen.test.model.Model1;
+import com.github.decioamador.jdocsgen.test.model.Model2;
+import com.github.decioamador.jdocsgen.test.model.Model3;
 import com.github.decioamador.jdocsgen.text.TextGenerator;
 import com.github.decioamador.jdocsgen.text.TextOptions;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
