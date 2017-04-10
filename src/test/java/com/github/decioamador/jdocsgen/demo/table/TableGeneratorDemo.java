@@ -4,7 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,26 +11,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import com.github.decioamador.jdocsgen.model.Model1;
+import com.github.decioamador.jdocsgen.model.Model2;
+import com.github.decioamador.jdocsgen.model.Model3;
 import com.github.decioamador.jdocsgen.table.TableGenerator;
 import com.github.decioamador.jdocsgen.table.TableOptions;
-import com.github.decioamador.jdocsgen.test.model.Model1;
-import com.github.decioamador.jdocsgen.test.model.Model2;
-import com.github.decioamador.jdocsgen.test.model.Model3;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 
 public class TableGeneratorDemo {
 
 	public static void main(final String[] args) throws Exception {
-		final String filename = "test.xlsx";
 
-		final List<String> columns = Arrays.asList(
+		final List<String> titles = Arrays.asList(
 				"Referencia","Data","Id","Nome",
 				"Uuid2","Rotulo","Uuid3","Numero"); // PT
 
@@ -42,16 +38,17 @@ public class TableGeneratorDemo {
 
 		final TranslatorCollection translator = new TranslatorCollection();
 
-		final Set<String> fieldsToTranslate = new HashSet<>();
-		fieldsToTranslate.add("name");
-		translator.setFieldsToMap(fieldsToTranslate);
+		translator.setFieldsToMap(new HashSet<>());
+		translator.getFieldsToMap().add("name");
 
-		final Map<String,String> mapTrans = new HashMap<>(); // EN to PT
-		mapTrans.put("people","pessoas");
-		mapTrans.put("life","vida");
-		mapTrans.put("time","tempo");
-		mapTrans.put("world","mundo");
-		translator.setMap(mapTrans);
+		translator.setMap(new HashMap<>()); // EN to PT
+		translator.getMap().put("people","pessoas");
+		translator.getMap().put("life","vida");
+		translator.getMap().put("time","tempo");
+		translator.getMap().put("world","mundo");
+
+		translator.setFieldsToFormat(new HashMap<>());
+		translator.getFieldsToFormat().put("date", new SimpleDateFormat("yyyy-MM-dd"));
 
 		final List<Model1> objs = new ArrayList<>();
 		objs.add(new Model1(UUID.randomUUID().toString(), 111L, new Date(), "people",
@@ -81,16 +78,11 @@ public class TableGeneratorDemo {
 		options.setInitPosRow(2);
 		options.setInitPosCol(1);
 
-		final Map<String,Format> formats = new HashMap<>();
-		formats.put("date", new SimpleDateFormat("yyyy-MM-dd"));
-		translator.setFieldsToFormat(formats);
-
-		final Workbook wb = new XSSFWorkbook();
-
+		final Workbook wb = new SXSSFWorkbook();
 		try(TableGenerator tg = new TableGenerator(wb);
-				OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(filename)))){
-			tg.generateTable("Sheet Name 1", options, objs, columns, fields, translator);
-			tg.generateTable("Sheet Name 2", options, objs2, columns, fields, translator);
+				OutputStream os = new BufferedOutputStream(new FileOutputStream(new File("test.xlsx")))){
+			tg.generateTable("Sheet Name 1", options, objs, titles, fields, translator);
+			tg.generateTable("Sheet Name 2", options, objs2, titles, fields, translator);
 			tg.write(os);
 		}
 	}

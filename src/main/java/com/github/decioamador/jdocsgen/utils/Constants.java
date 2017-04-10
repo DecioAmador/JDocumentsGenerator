@@ -2,8 +2,6 @@ package com.github.decioamador.jdocsgen.utils;
 
 /**
  * Utility constants
- *
- * @since 1.1.0.0
  */
 public class Constants {
 

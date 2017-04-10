@@ -11,16 +11,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 
-import com.github.decioamador.jdocsgen.JDocsGenException;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 import com.github.decioamador.jdocsgen.translation.TranslatorHelper;
 import com.github.decioamador.jdocsgen.utils.FieldResolution;
 
 /**
  * This class has the purpose generating tables
- *
- * @since 1.0.0.0
  */
 public class TableGenerator implements AutoCloseable {
 
@@ -45,22 +43,21 @@ public class TableGenerator implements AutoCloseable {
 	 *            Options to generate this table
 	 * @param objs
 	 *            Objects that will be the lines
-	 * @param columns
+	 * @param titles
 	 *            The title of the columns
 	 * @param fields
 	 *            The path of the field
 	 * @param translator
 	 *            A collection used to translate
 	 * @return the sheet being used
-	 * @since 1.0.0.0
 	 */
 	public Sheet generateTable(final String sheetName,
 			final TableOptions options, final Collection<?> objs,
-			final List<String> columns, final List<String> fields,
+			final List<String> titles, final List<String> fields,
 			final TranslatorCollection translator) {
 
 		final Sheet sheet = workbook.createSheet(sheetName);
-		generateTable(sheet, options, objs, columns, fields, translator);
+		generateTable(sheet, options, objs, titles, fields, translator);
 		return sheet;
 	}
 
@@ -79,9 +76,8 @@ public class TableGenerator implements AutoCloseable {
 	 *            The path of the field
 	 * @param translator
 	 *            A collection used to translate
-	 * @since 1.0.0.0
 	 */
-	public void generateTable(Sheet sheet, final TableOptions options,
+	public void generateTable(final Sheet sheet, final TableOptions options,
 			final Collection<?> objs, final List<String> titles,
 			final List<String> fields, final TranslatorCollection translator) {
 
@@ -89,14 +85,13 @@ public class TableGenerator implements AutoCloseable {
 		Class<?> clazz;
 		Object o;
 
-		sheet = checkSheet(sheet);
 		Cell cell;
 		Row row;
 
 		row = sheet.createRow(rowNum++);
-		for(final String column : titles){
+		for(final String title : titles){
 			cell = row.createCell(columnNum++);
-			cell.setCellValue(column);
+			cell.setCellValue(title);
 			cell.setCellStyle(options.getTitlesStyle());
 		}
 
@@ -114,30 +109,29 @@ public class TableGenerator implements AutoCloseable {
 			}
 		}
 
-		if(options.isAutosize()){
-			for(int j = options.getInitPosCol(); j <= columnNum; j++){
-				sheet.autoSizeColumn(j);
-			}
-		}
+		autosizeColumns(sheet, options, titles.size());
 	}
 
 	/**
-	 * Checks if the sheet is correct and creates in case that's null
+	 * Autosize the columns
 	 *
 	 * @param sheet
-	 *            sheet to check
-	 * @return a valid sheet
+	 *            sheet being used
+	 * @param options
+	 *            options being used
+	 * @param titlesSize
+	 *            size of the titles
 	 */
-	private Sheet checkSheet(final Sheet sheet){
-		Sheet result;
-		if(sheet == null){
-			result = workbook.createSheet();
-		} else if(workbook.getSheet(sheet.getSheetName()) == null){
-			throw new JDocsGenException("The sheet is not from this workbook.");
-		} else {
-			result = sheet;
+	private void autosizeColumns(final Sheet sheet, final TableOptions options, final int titlesSize) {
+		if(options.isAutosize()){
+			final boolean track = sheet instanceof SXSSFSheet;
+			for(int i=options.getInitPosCol(); i<=(options.getInitPosCol() + titlesSize); i++){
+				if(track){
+					((SXSSFSheet) sheet).trackColumnForAutoSizing(i);
+				}
+				sheet.autoSizeColumn(i);
+			}
 		}
-		return result;
 	}
 
 	/**
@@ -147,15 +141,12 @@ public class TableGenerator implements AutoCloseable {
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
-	 * @since 1.0.0.0
 	 */
 	public ByteArrayInputStream write() throws IOException {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		workbook.write(bos);
 		return new ByteArrayInputStream(bos.toByteArray());
 	}
-
-
 
 	/**
 	 * Writes the generated document on the stream, writing on the existing one
@@ -165,7 +156,6 @@ public class TableGenerator implements AutoCloseable {
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
-	 * @since 1.0.0.0
 	 */
 	public void write(final OutputStream outputStream) throws IOException {
 		workbook.write(outputStream);
@@ -173,8 +163,6 @@ public class TableGenerator implements AutoCloseable {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @since 1.0.0.0
 	 */
 	@Override
 	public void close() throws IOException {

@@ -2,8 +2,6 @@ package com.github.decioamador.jdocsgen;
 
 /**
  * This class is a dedicated exception of JDocsGen
- *
- * @since 1.1.0.0
  */
 public class JDocsGenException extends RuntimeException {
 

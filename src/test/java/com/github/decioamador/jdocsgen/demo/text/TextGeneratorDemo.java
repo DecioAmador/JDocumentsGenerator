@@ -4,7 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,15 +11,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import com.github.decioamador.jdocsgen.test.model.Model1;
-import com.github.decioamador.jdocsgen.test.model.Model2;
-import com.github.decioamador.jdocsgen.test.model.Model3;
+import com.github.decioamador.jdocsgen.model.Model1;
+import com.github.decioamador.jdocsgen.model.Model2;
+import com.github.decioamador.jdocsgen.model.Model3;
 import com.github.decioamador.jdocsgen.text.TextGenerator;
 import com.github.decioamador.jdocsgen.text.TextOptions;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
@@ -42,16 +39,17 @@ public class TextGeneratorDemo {
 
 		final TranslatorCollection translator = new TranslatorCollection();
 
-		final Map<String,String> fieldsToMap = new HashMap<>(); // EN to PT
-		fieldsToMap.put("people","pessoas");
-		fieldsToMap.put("life","vida");
-		fieldsToMap.put("time","tempo");
-		fieldsToMap.put("world","mundo");
-		translator.setMap(fieldsToMap);
+		translator.setMap(new HashMap<>()); // EN to PT
+		translator.getMap().put("people","pessoas");
+		translator.getMap().put("life","vida");
+		translator.getMap().put("time","tempo");
+		translator.getMap().put("world","mundo");
 
-		final Set<String> map = new HashSet<>();
-		map.add("name");
-		translator.setFieldsToMap(map);
+		translator.setFieldsToMap(new HashSet<>());
+		translator.getFieldsToMap().add("name");
+
+		translator.setFieldsToFormat(new HashMap<>());
+		translator.getFieldsToFormat().put("date", new SimpleDateFormat("yyyy-MM-dd"));
 
 		final List<Model1> objs = new ArrayList<>();
 		Model1 obj = new Model1(UUID.randomUUID().toString(), 111L, new Date(), "people",
@@ -68,10 +66,6 @@ public class TextGeneratorDemo {
 
 		final TextOptions options = new TextOptions();
 		options.setBetweenLabelAndField(" - ");
-
-		final Map<String,Format> formats = new HashMap<>();
-		formats.put("date", new SimpleDateFormat("yyyy-MM-dd"));
-		translator.setFieldsToFormat(formats);
 
 		XWPFDocument document = new XWPFDocument();
 		try(TextGenerator tg = new TextGenerator(document);

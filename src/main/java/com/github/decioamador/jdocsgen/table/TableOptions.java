@@ -4,8 +4,6 @@ import org.apache.poi.ss.usermodel.CellStyle;
 
 /**
  * Options of the {@link TableGenerator}
- *
- * @since 1.0.0.0
  */
 public class TableOptions {
 
@@ -13,8 +11,6 @@ public class TableOptions {
 	 * <b>Expected type:</b> {@link Integer} <br>
 	 * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
 	 * <b>Default:</b> 0 - first row
-	 *
-	 * @since 1.0.0.0
 	 */
 	private int initPosRow = 0;
 
@@ -22,8 +18,6 @@ public class TableOptions {
 	 * <b>Expected type:</b> {@link Integer} <br>
 	 * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
 	 * <b>Default:</b> 0 - first column
-	 *
-	 * @since 1.0.0.0
 	 */
 	private int initPosCol = 0;
 
@@ -31,8 +25,7 @@ public class TableOptions {
 	 * <b>Expected type:</b> {@link Boolean} <br>
 	 * <b>Meaning:</b> If columns will be auto size <br>
 	 * <b>Default:</b> false
-	 *
-	 * @since 1.0.0.0
+	 * <b>Note:</b> This operation might be slow on large tables
 	 */
 	private boolean autosize = false;
 
@@ -40,8 +33,6 @@ public class TableOptions {
 	 * <b>Expected type:</b> {@link CellStyle} <br>
 	 * <b>Meaning:</b> Cell style applied to titles <br>
 	 * <b>Default:</b> null
-	 *
-	 * @since 1.1.0.0
 	 */
 	private CellStyle titlesStyle;
 
@@ -49,8 +40,6 @@ public class TableOptions {
 	 * <b>Expected type:</b> {@link CellStyle} <br>
 	 * <b>Meaning:</b> Cell style applied to fields <br>
 	 * <b>Default:</b> null
-	 *
-	 * @since 1.1.0.0
 	 */
 	private CellStyle fieldsStyle;
 

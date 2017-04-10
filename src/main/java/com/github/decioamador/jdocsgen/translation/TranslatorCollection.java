@@ -8,8 +8,6 @@ import java.util.Set;
 
 /**
  * Utility class to store all the supports things needed for translation
- *
- * @since 1.1.0.0
  */
 public class TranslatorCollection {
 

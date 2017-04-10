@@ -7,8 +7,6 @@ import com.github.decioamador.jdocsgen.JDocsGenException;
 
 /**
  * This class has the purpose of generating text
- *
- * @since 1.1.0.0
  */
 public class FieldResolution {
 
@@ -37,7 +35,7 @@ public class FieldResolution {
 		while(i < mthds.length && going){
 			Method m;
 			try {
-				m = temp.getMethod(transformToGet(mthds[i]));
+				m = temp.getMethod(transformToGet(mthds[i++]));
 			} catch (NoSuchMethodException | SecurityException e) {
 				throw new JDocsGenException(e);
 			}
@@ -53,7 +51,6 @@ public class FieldResolution {
 					going = false;
 				}
 			}
-			i++;
 		}
 		return o;
 	}

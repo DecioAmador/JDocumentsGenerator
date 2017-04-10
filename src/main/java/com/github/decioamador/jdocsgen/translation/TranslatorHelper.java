@@ -8,8 +8,6 @@ import com.github.decioamador.jdocsgen.utils.Constants;
 
 /**
  * Helper class to translate fields
- *
- * @since 1.1.0.0
  */
 public class TranslatorHelper {
 
@@ -27,7 +25,6 @@ public class TranslatorHelper {
 	 * @param trans
 	 *            TranslatorCollection being used
 	 * @return the representation value of the object
-	 * @since 1.1.0.0
 	 */
 	public static String getValue(final Object obj, final String field, final TranslatorCollection trans) {
 		String result = null;
@@ -56,7 +53,6 @@ public class TranslatorHelper {
 	 * @param trans
 	 *            translator being used
 	 * @return the representation of the object
-	 * @since 1.1.0.0
 	 */
 	private static String getTranslatorCollectionValue(final Object obj, final String field, final TranslatorCollection trans) {
 		Object temp = obj;

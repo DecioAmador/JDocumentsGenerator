@@ -2,8 +2,6 @@ package com.github.decioamador.jdocsgen.text;
 
 /**
  * Options of the {@link TextGenerator}
- *
- * @since 1.1.0.0
  */
 public class TextOptions {
 
@@ -12,8 +10,6 @@ public class TextOptions {
 	 * <b>Meaning:</b> Puts a string between the label and the value of the field <br>
 	 * E.g: Uuid: 9ca2e341-a4c5-485e-ba68-c90fafb13f27 <br>
 	 * <b>Default:</b> ": "
-	 *
-	 * @since 1.1.0.0
 	 */
 	private String betweenLabelAndField = ": ";
 

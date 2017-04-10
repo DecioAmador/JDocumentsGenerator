@@ -20,7 +20,6 @@ import com.github.decioamador.jdocsgen.utils.FieldResolution;
 
 /**
  * This class has the purpose of generating text
- * @since 1.1.0.0
  */
 public class TextGenerator implements AutoCloseable {
 
@@ -52,7 +51,6 @@ public class TextGenerator implements AutoCloseable {
 	 * @param translator
 	 *            A collection used to translate
 	 * @return the paragraph being used
-	 * @since 1.1.0.0
 	 */
 	public XWPFParagraph generateParagraph(final Object obj, final TextOptions options,
 			final List<String> labels, final List<String> fields,
@@ -96,7 +94,6 @@ public class TextGenerator implements AutoCloseable {
 	 * @param translator
 	 *            A collection used to translate
 	 * @return the table generated
-	 * @since 1.1.0.0
 	 */
 	public XWPFTable generateTable(final Collection<?> objs,
 			final List<String> titles, final List<String> fields,
@@ -137,7 +134,6 @@ public class TextGenerator implements AutoCloseable {
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
-	 * @since 1.0.0.0
 	 */
 	public ByteArrayInputStream write() throws IOException {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -155,7 +151,6 @@ public class TextGenerator implements AutoCloseable {
 	 * @throws IOException
 	 *            If an I/O error occurs. In particular, an IOException may be
 	 *            thrown if the output stream has been closed.
-	 * @since 1.0.0.0
 	 */
 	public void write(final OutputStream outputStream) throws IOException {
 		document.write(outputStream);
@@ -163,8 +158,6 @@ public class TextGenerator implements AutoCloseable {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @since 1.1.0.0
 	 */
 	@Override
 	public void close() throws IOException {
