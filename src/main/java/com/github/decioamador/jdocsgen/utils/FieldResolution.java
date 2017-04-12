@@ -18,7 +18,7 @@ public class FieldResolution {
 	 * Resolve a field
 	 *
 	 * @param clazz
-	 *            Classe being used
+	 *            Class being used
 	 * @param obj
 	 *            Object being used
 	 * @param field

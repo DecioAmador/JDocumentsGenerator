@@ -125,7 +125,7 @@ public class TableGenerator implements AutoCloseable {
 	private void autosizeColumns(final Sheet sheet, final TableOptions options, final int titlesSize) {
 		if(options.isAutosize()){
 			final boolean track = sheet instanceof SXSSFSheet;
-			for(int i=options.getInitPosCol(); i<=(options.getInitPosCol() + titlesSize); i++){
+			for(int i=options.getInitPosCol(); i<(options.getInitPosCol() + titlesSize); i++){
 				if(track){
 					((SXSSFSheet) sheet).trackColumnForAutoSizing(i);
 				}
