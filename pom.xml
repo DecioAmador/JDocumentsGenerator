@@ -20,9 +20,13 @@
   		
 		<project.build.sourceEncoding>${char.encoding}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${char.encoding}</project.reporting.outputEncoding>
+		
+        <junit.version>4.12</junit.version>
+		<junit.jupiter.version>5.0.1</junit.jupiter.version>
+		<junit.vintage.version>${junit.version}.1</junit.vintage.version>
+		<junit.platform.version>1.0.1</junit.platform.version>
   		
-        <junit.jupiter.version>5.0.1</junit.jupiter.version>
-        <junit.platform.version>1.0.1</junit.platform.version>
+		<poi.version>3.17</poi.version>
 	</properties>
 	
 	<licenses>
@@ -33,15 +37,9 @@
 		</license>
 	</licenses>
 
-	<developers>
-		<developer>
-			<name>Décio Amador</name>
-			<email>decio.amador@hotmail.com</email>
-		</developer>
-	</developers>
-	
 	<issueManagement>
 		<url>https://github.com/DecioAmador/Jdocuments-generator/issues</url>
+		<system>Github</system>
 	</issueManagement>
 
 	<scm>
@@ -140,70 +138,82 @@
 				</configuration>
 			</plugin>
 			
-			<!-- Maven integration with junit5 -->
 			<plugin>
 	            <artifactId>maven-surefire-plugin</artifactId>
 	            <version>2.19</version>
+	            <configuration>
+	            	<includes>
+						<include>**/*Tests.java</include>
+					</includes>
+	            </configuration>
 	            <dependencies>
 	                <dependency>
-	                    <groupId>org.junit.platform</groupId>
-	                    <artifactId>junit-platform-surefire-provider</artifactId>
-	                    <version>${junit.platform.version}</version>
-	                </dependency>
-	                <dependency>
-	                    <groupId>org.junit.jupiter</groupId>
-	                    <artifactId>junit-jupiter-engine</artifactId>
-	                    <version>${junit.jupiter.version}</version>
-	                </dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>${junit.platform.version}</version>
+					</dependency>
 	            </dependencies>
 	        </plugin>
-			
-			<!-- https://maven.apache.org/surefire/maven-failsafe-plugin/examples/junit.html#Running_tests_in_parallel -->
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.20.1</version>
-                <configuration>
-                    <parallel>all</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
-                </configuration>
-            </plugin>
 
 		</plugins>
 		
 	</build>
 
 	<dependencies>
-	
-	    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-		<dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.17</version>
+			<version>${poi.version}</version>
+		</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+	    <dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Only required to run tests in an IDE that bundles an older version -->
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<version>${junit.platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Only required to run tests in an IDE that bundles an older version -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Only required to run tests in an IDE that bundles an older version -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit.vintage.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 	</dependencies>

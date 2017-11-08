@@ -4,72 +4,93 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import com.github.decioamador.jdocsgen.translation.Translator;
+import com.github.decioamador.jdocsgen.translation.TranslatorUtils;
 import com.github.decioamador.jdocsgen.utils.FieldResolution;
 
 /**
- * This class has the purpose of generating text
+ * This class has the purpose of generating text based document
  */
 public class TextGenerator implements AutoCloseable {
 
     private final XWPFDocument document;
 
     /**
-     * Constructor of TextGenerator
+     * Creates a {@linkplain TextGenerator} by using a specified instance of a
+     * {@link XWPFDocument}
      *
      * @param document
-     *            Document that will be used
+     *            High(ish) level representation for working with .docx files
      */
     public TextGenerator(final XWPFDocument document) {
         this.document = Objects.requireNonNull(document);
     }
 
     /**
-     * It generates a paragraph base on the arguments <br>
-     * <br>
-     * <b>Tip:</b> You should use {@link ArrayList} on labels and fields
+     * Create a new {@linkplain XWPFParagraph} for the wrapped
+     * {@linkplain XWPFDocument}. Generates a paragraph for that the object will be
+     * represented in each line is a field and the labels will be put behind the
+     * values of the fields. Return the paragraph created.
      *
      * @param obj
-     *            Object that will be use to generate line
+     *            Objects that will represent a paragraph in the text
      * @param options
-     *            Options to generate this table
+     *            Options to generate this text
      * @param labels
-     *            The labels of the fields
+     *            TAn array that each element is the label for a line
      * @param fields
-     *            The path of the field
+     *            An array that each element is an EL path for a field
      * @param translator
-     *            A collection used to translate
-     * @return the paragraph being used
+     *            Gives the user an opportunity to change the value of a field by
+     *            another (internationalization, format currency, format dates)
+     * @return A {@linkplain XWPFParagraph} that contains the information of the
+     *         object
      */
-    public XWPFParagraph generateParagraph(final Object obj, final TextOptions options, final List<String> labels,
-            final List<String> fields, final Translator translator) {
+    public XWPFParagraph generateParagraph(final Object obj, final TextOptions options, final String[] labels,
+            final String[] fields, final Translator translator) {
 
         final XWPFParagraph paragraph = document.createParagraph();
         XWPFRun run;
 
         Object o;
         String field;
+        String translated;
+        final String sep = options.getSeperatorAgg();
+        final boolean agg = options.isAggregate();
 
         if (obj != null) {
-            for (int i = 0; i < fields.size(); i++) {
-                field = fields.get(i);
-                o = FieldResolution.resolveField(obj, field);
+            for (int i = 0; i < fields.length; i++) {
+                field = fields[i];
+                if (agg) {
+                    o = FieldResolution.resolveFieldAggregation(obj, field);
+                } else {
+                    o = FieldResolution.resolveField(obj, field);
+                }
 
                 run = paragraph.createRun();
-                run.setText(labels.get(i) + options.getBetweenLabelAndField());
+                run.setText(labels[i]);
+
                 run = paragraph.createRun();
-                run.setText(translator.getValue(o, fields.get(i)));
+                run.setText(options.getBetweenLabelAndField());
+
+                if (o != null) {
+                    translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
+
+                    if (translated != null) {
+                        run = paragraph.createRun();
+                        run.setText(translated);
+                    }
+                }
                 run.addBreak();
             }
         }
@@ -78,42 +99,66 @@ public class TextGenerator implements AutoCloseable {
     }
 
     /**
-     * It generates a table base on the arguments <br>
-     * <br>
-     * <b>Tip:</b> You should use {@link ArrayList} on labels and fields
+     * Create a new {@linkplain XWPFTable} for the wrapped
+     * {@linkplain XWPFDocument}. Generates a table that the objects will be
+     * represented in each line and the titles will be put in the line above. Return
+     * the table created.
      *
      * @param objs
-     *            Objects that will be the lines
+     *            Objects that will represent the lines of the table
+     * @param options
+     *            Options to generate this table
      * @param titles
-     *            The title of the columns
+     *            An array that each element is the title for a column
      * @param fields
-     *            The path of the field
+     *            An array that each element is an EL path for a field
      * @param translator
-     *            A collection used to translate
-     * @return the table generated
+     *            Gives the user an opportunity to change the value of a field by
+     *            another (internationalization, format currency, format dates)
+     * @return A {@linkplain XWPFTable} that contains the information in a table
      */
-    public XWPFTable generateTable(final Collection<?> objs, final List<String> titles, final List<String> fields,
-            final Translator translator) {
+    public XWPFTable generateTable(final Collection<?> objs, final TextOptions options, final String[] titles,
+            final String[] fields, final Translator translator) {
 
-        int rowNum = 0;
-        Object o;
+        final boolean agg = options.isAggregate();
+        final String sep = options.getSeperatorAgg();
+        String translated;
         String field;
+        int rowNum = 0;
+        XWPFTableCell cell;
+        Object o;
 
-        final XWPFTable table = document.createTable(objs.size() + 1, titles.size());
+        final int countNonNullObjs = (int) objs.stream().filter(Objects::nonNull).count();
+        final XWPFTable table = document.createTable(countNonNullObjs + 1, titles.length);
+
         XWPFTableRow row = table.getRow(rowNum++);
-
-        for (int i = 0; i < titles.size(); i++) {
-            row.getCell(i).setText(titles.get(i));
+        for (int i = 0; i < titles.length; i++) {
+            cell = row.getCell(i);
+            cell.setText(titles[i]);
         }
 
         for (final Object obj : objs) {
             if (obj != null) {
                 row = table.getRow(rowNum++);
 
-                for (int i = 0; i < fields.size(); i++) {
-                    field = fields.get(i);
-                    o = FieldResolution.resolveField(obj, field);
-                    row.getCell(i).setText(translator.getValue(o, field));
+                for (int i = 0; i < fields.length; i++) {
+                    field = fields[i];
+
+                    if (agg) {
+                        o = FieldResolution.resolveFieldAggregation(obj, field);
+                    } else {
+                        o = FieldResolution.resolveField(obj, field);
+                    }
+
+                    cell = row.getCell(i);
+
+                    if (o != null) {
+                        translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
+
+                        if (translated != null) {
+                            cell.setText(translated);
+                        }
+                    }
                 }
             }
         }
@@ -158,7 +203,7 @@ public class TextGenerator implements AutoCloseable {
 
     /**
      * XWPFDocument that is being used by the {@link TextGenerator}
-     * 
+     *
      * @return text base document being used
      */
     public XWPFDocument getDocument() {

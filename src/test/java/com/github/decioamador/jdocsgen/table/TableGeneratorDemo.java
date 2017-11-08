@@ -17,6 +17,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import com.github.decioamador.jdocsgen.model.DataProduct;
 import com.github.decioamador.jdocsgen.model.product.Product;
+import com.github.decioamador.jdocsgen.translation.Translator;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
 import com.github.decioamador.jdocsgen.translation.TranslatorHelper;
 
@@ -28,31 +29,32 @@ public class TableGeneratorDemo {
         final Workbook wb = new SXSSFWorkbook();
 
         // Titles
-        final List<String> titles = Arrays.asList("Reference", "Name(Zulu)", "Description", "Prices");
+        final String[] titles = new String[] { "Reference", "Name(Zulu)", "Description", "Prices" };
 
         // Fields
-        final List<String> fields = Arrays.asList("uuid", "basicInfo.name", "basicInfo.description", "prices");
+        final String[] fields = new String[] { "uuid", "basicInfo.name", "basicInfo.description", "prices" };
 
         // Products
         final List<Product> fruits = Arrays.asList(DataProduct.getProductsFruits());
         final List<Product> vegetables = Arrays.asList(DataProduct.getProductsVegetables());
         final List<Product> proteins = Arrays.asList(DataProduct.getProductsProteins());
-        final List<Product> dairy = Arrays.asList(DataProduct.getProductsDairy());
+        final List<Product> dairies = Arrays.asList(DataProduct.getProductsDairies());
         final List<Product> oils = Arrays.asList(DataProduct.getProductsOils());
 
         // Translator
-        final TranslatorCollection translator = new TranslatorCollection();
-        translator.setRawPrint(new HashSet<String>());
-        translator.getRawPrint().addAll(Arrays.asList("uuid", "basicInfo.description", "prices"));
-        translator.setResourceBundleMap(new HashMap<>());
-        translator.getResourceBundleMap().put("basicInfo.name", DataProduct.getResourceBundleProductsNames());
-        final TranslatorHelper transHelper = new TranslatorHelper(translator);
+        final TranslatorCollection transCollection = new TranslatorCollection();
+        transCollection.setRawPrint(new HashSet<String>());
+        transCollection.getRawPrint().addAll(Arrays.asList("uuid", "basicInfo.description", "prices"));
+        transCollection.setResourceBundleMap(new HashMap<>());
+        transCollection.getResourceBundleMap().put("basicInfo.name", DataProduct.getResourceBundleProductsNames());
+        final Translator translator = new TranslatorHelper(transCollection);
 
         // Options
         final TableOptions options = new TableOptions();
-        options.setAutosize(true);
+        options.setAutoSize(true);
         options.setInitPosRow(2);
         options.setInitPosCol(1);
+        options.setAggregate(true);
         options.setSeperatorAgg("; ");
 
         // Style for fields
@@ -79,12 +81,13 @@ public class TableGeneratorDemo {
         try (TableGenerator tg = new TableGenerator(wb);
                 OutputStream os = Files.newOutputStream(Paths.get("./demo.xlsx"))) {
 
-            tg.generateTable("Fruits", options, fruits, titles, fields, transHelper);
-            tg.generateTable("Vegetables", options, vegetables, titles, fields, transHelper);
-            tg.generateTable("Proteins", options, proteins, titles, fields, transHelper);
-            tg.generateTable("Dairy", options, dairy, titles, fields, transHelper);
-            tg.generateTable("Oils", options, oils, titles, fields, transHelper);
+            tg.generateTable("Fruits", options, fruits, titles, fields, translator);
+            tg.generateTable("Vegetables", options, vegetables, titles, fields, translator);
+            tg.generateTable("Proteins", options, proteins, titles, fields, translator);
+            tg.generateTable("Dairies", options, dairies, titles, fields, translator);
+            tg.generateTable("Oils", options, oils, titles, fields, translator);
 
+            // Write document
             tg.write(os);
         }
     }

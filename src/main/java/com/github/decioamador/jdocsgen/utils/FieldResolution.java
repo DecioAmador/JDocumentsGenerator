@@ -7,7 +7,7 @@ import java.util.Collection;
 import com.github.decioamador.jdocsgen.JDocsGenException;
 
 /**
- * This class has the purpose of generating text
+ * This class has the purpose of auxiliary in the path resolution of the fields
  */
 public final class FieldResolution {
 
@@ -25,7 +25,7 @@ public final class FieldResolution {
      *            Object being used
      * @param field
      *            field path like EL
-     * @return The object being resolved
+     * @return The object resolved
      */
     public static Object resolveField(final Object obj, final String field) {
         int i = 0;
@@ -121,7 +121,8 @@ public final class FieldResolution {
      */
     private static Object resolveMethodAggregation(final Object obj, final Method m) {
         Collection<?> c;
-        Object[] objs, arrayObj;
+        Object[] arrayObj;
+        Object[] objs;
         Object o = obj;
         int i = 0;
 
@@ -188,7 +189,8 @@ public final class FieldResolution {
      */
     private static Object[] aggregateArrays(final Object[] o) {
         Object[] innerArray;
-        int size = 0, pointer = 0;
+        int pointer = 0;
+        int size = 0;
 
         // Calculate size
         for (int i = 0; i < o.length; i++) {
@@ -203,9 +205,9 @@ public final class FieldResolution {
         for (int i = 0; i < o.length; i++) {
             innerArray = (Object[]) o[i];
             if (innerArray != null) {
-                for (int j = 0; j < innerArray.length; j++) {
-                    if (innerArray[j] != null) {
-                        result[pointer++] = innerArray[j];
+                for (final Object aux : innerArray) {
+                    if (aux != null) {
+                        result[pointer++] = aux;
                     }
                 }
             }
@@ -225,7 +227,8 @@ public final class FieldResolution {
      */
     private static Object[] aggregateCollections(final Object[] o) {
         Collection<?> innerCollection;
-        int size = 0, pointer = 0;
+        int pointer = 0;
+        int size = 0;
 
         // Calculate size
         for (int i = 0; i < o.length; i++) {

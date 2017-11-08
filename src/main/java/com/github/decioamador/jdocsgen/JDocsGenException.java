@@ -1,7 +1,7 @@
 package com.github.decioamador.jdocsgen;
 
 /**
- * This class is a dedicated exception of JDocsGen
+ * This class is a dedicated exception for JDocumentsGenerator
  */
 public class JDocsGenException extends RuntimeException {
 
@@ -13,7 +13,7 @@ public class JDocsGenException extends RuntimeException {
      * {@link #initCause}.
      */
     public JDocsGenException() {
-	super();
+        super();
     }
 
     /**
@@ -31,7 +31,7 @@ public class JDocsGenException extends RuntimeException {
      *            and indicates that the cause is nonexistent or unknown.)
      */
     public JDocsGenException(final String message, final Throwable cause) {
-	super(message, cause);
+        super(message, cause);
     }
 
     /**
@@ -44,7 +44,7 @@ public class JDocsGenException extends RuntimeException {
      *            retrieval by the {@link #getMessage()} method.
      */
     public JDocsGenException(final String message) {
-	super(message);
+        super(message);
     }
 
     /**
@@ -60,7 +60,7 @@ public class JDocsGenException extends RuntimeException {
      *            and indicates that the cause is nonexistent or unknown.)
      */
     public JDocsGenException(final Throwable cause) {
-	super(cause);
+        super(cause);
     }
 
 }

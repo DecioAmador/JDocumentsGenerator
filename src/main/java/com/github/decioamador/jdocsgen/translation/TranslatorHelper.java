@@ -21,19 +21,13 @@ public class TranslatorHelper implements Translator {
     }
 
     /**
-     * This methods makes the textual representation of a value
+     * {@inheritDoc}
      *
-     * @param obj
-     *            Object to process
-     * @param field
-     *            Field to process
-     * @param sep
-     *            Separator
-     * @return the representation value of the object
+     * @return the representation of the value or null in case it doesn't have any
      */
     @Override
     public String getValue(final Object[] objs, final String field, final String sep) {
-        boolean nonFirstElem = false;
+        boolean notFirstElem = false;
         String result = null;
         String value;
 
@@ -42,11 +36,11 @@ public class TranslatorHelper implements Translator {
             for (int i = 0; i < objs.length; i++) {
                 value = getValue(objs[i], field);
                 if (value != null) {
-                    if (nonFirstElem) {
+                    if (notFirstElem) {
                         sb.append(sep);
                     }
                     sb.append(value);
-                    nonFirstElem = true;
+                    notFirstElem = true;
                 }
             }
 
@@ -58,13 +52,9 @@ public class TranslatorHelper implements Translator {
     }
 
     /**
-     * This methods makes the textual representation of a value
+     * {@inheritDoc}
      *
-     * @param obj
-     *            Object to process
-     * @param field
-     *            Field to process
-     * @return the representation value of the object
+     * @return the representation of the value or null in case it doesn't have any
      */
     @Override
     public String getValue(final Object obj, final String field) {
@@ -83,7 +73,7 @@ public class TranslatorHelper implements Translator {
      * @param obj
      *            Object to process
      * @param field
-     *            Field to process
+     *            Field that is used as an id
      * @return the representation of the object
      */
     protected String getTranslatorCollectionValue(final Object obj, final String field) {
@@ -132,8 +122,6 @@ public class TranslatorHelper implements Translator {
      *            Object that must be also a {@link TemporalAccessor}
      * @param field
      *            field like an EL path being used to resolve an object
-     * @param trans
-     *            translator collection
      * @return the representation of the object
      */
     protected String handleDateTimeFormat(final Object obj, final String field) {
@@ -185,7 +173,7 @@ public class TranslatorHelper implements Translator {
     /**
      * TranslatorCollection that is wrapped in this instance of the
      * {@link TranslatorHelper}
-     * 
+     *
      * @return translator collection being used
      */
     public TranslatorCollection getTranslatorCollection() {

@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.github.decioamador.jdocsgen.model.DataAnimal;
 import com.github.decioamador.jdocsgen.model.DataProduct;
 
-public class TranslationHelperTests {
+public class TranslatorHelperTests {
 
     static Stream<Arguments> getValueArrayArguments() {
         Stream<Arguments> prevArgs = Stream.concat(getTranslatorCollectionValueArguments(), handleFormatArguments());
@@ -191,7 +191,7 @@ public class TranslationHelperTests {
 
         final TranslatorCollection translator2 = new TranslatorCollection();
         translator2.setFieldsToMap(new HashSet<>());
-        translator2.setMap(DataProduct.getTranslatorDairy());
+        translator2.setMap(DataProduct.getTranslatorDairies());
         builder.add(Arguments.of(new TranslatorHelper(translator2), "Cheese", "Ushizi"));
 
         return builder.build();

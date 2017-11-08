@@ -9,174 +9,204 @@ import org.apache.poi.ss.usermodel.CellStyle;
  */
 public class TableOptions {
 
-    /**
-     * <b>Expected type:</b> {@link Integer} <br>
-     * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
-     * <b>Default:</b> 0 - first row
-     */
     private int initPosRow = 0;
-
-    /**
-     * <b>Expected type:</b> {@link Integer} <br>
-     * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
-     * <b>Default:</b> 0 - first column
-     */
     private int initPosCol = 0;
 
+    private boolean autoSize = false;
+    private boolean prevailTitlesStyle = true;
+
+    private boolean aggregate = false;
+    private String seperatorAgg = ", ";
+
+    private CellStyle titlesStyle;
+    private CellStyle fieldsStyle;
+
     /**
-     * <b>Expected type:</b> {@link Boolean} <br>
-     * <b>Meaning:</b> If columns will be auto size <br>
-     * <b>Default:</b> false <b>Note:</b> This operation might be slow on large
-     * tables
+     * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
+     * <b>Default:</b> {@literal 0} - first row
+     *
+     * @return the position of the first row
      */
-    private boolean autosize = false;
+    public int getInitPosRow() {
+        return initPosRow;
+    }
+
+    /**
+     * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
+     * <b>Default:</b> {@literal 0} - first row
+     *
+     * @param initPosRow
+     *            the position of the first row
+     */
+    public void setInitPosRow(final int initPosRow) {
+        this.initPosRow = initPosRow;
+    }
+
+    /**
+     * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
+     * <b>Default:</b> {@literal 0} - first column
+     *
+     * @return the position of the first column
+     */
+    public int getInitPosCol() {
+        return initPosCol;
+    }
+
+    /**
+     * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
+     * <b>Default:</b> {@literal 0} - first column
+     *
+     * @param initPosCol
+     *            the position of the first column
+     */
+    public void setInitPosCol(final int initPosCol) {
+        this.initPosCol = initPosCol;
+    }
+
+    /**
+     * <b>Meaning:</b> If columns will be auto size <br>
+     * <b>Default:</b> {@literal false} <br>
+     * <b>Note:</b> This operation might be slow on large tables
+     *
+     * @return Returns true if is pretended that columns are auto size and false
+     *         otherwise
+     */
+    public boolean isAutoSize() {
+        return autoSize;
+    }
+
+    /**
+     * <b>Meaning:</b> If columns will be auto size <br>
+     * <b>Default:</b> {@literal false} <br>
+     * <b>Note:</b> This operation might be slow on large tables
+     *
+     * @param autoSize
+     *            Returns true if is pretended that columns are auto size and false
+     *            otherwise
+     */
+    public void setAutoSize(final boolean autoSize) {
+        this.autoSize = autoSize;
+    }
+
+    /**
+     * <b>Meaning:</b> Cell style applied to titles <br>
+     * <b>Default:</b> {@literal null}
+     *
+     * @return the cell style used on titles
+     */
+    public CellStyle getTitlesStyle() {
+        return titlesStyle;
+    }
 
     /**
      * <b>Expected type:</b> {@link CellStyle} <br>
      * <b>Meaning:</b> Cell style applied to titles <br>
-     * <b>Default:</b> null
-     */
-    private CellStyle titlesStyle;
-
-    /**
-     * <b>Expected type:</b> {@link CellStyle} <br>
-     * <b>Meaning:</b> Cell style applied to fields <br>
-     * <b>Default:</b> null
-     */
-    private CellStyle fieldsStyle;
-
-    /**
-     * <b>Expected type:</b> {@link boolean} <br>
-     * <b>Meaning:</b> Aggregate values in case they pass through several
-     * {@link Collection} or Arrays <br>
-     * <b>Default:</b> true
-     */
-    private boolean aggregate = true;
-
-    /**
-     * <b>Expected type:</b> {@link String} <br>
-     * <b>Meaning:</b> The result of aggregating will be separated by it<br>
-     * <b>Default:</b> ', '
-     */
-    private String seperatorAgg = ", ";
-
-    /**
-     * @return the initial position of the row
-     * @see TableOptions#initPosRow
-     */
-    public int getInitPosRow() {
-	return initPosRow;
-    }
-
-    /**
-     * @param initPosRow
-     *            the initial position of the row
-     * @see TableOptions#initPosRow
-     */
-    public void setInitPosRow(final int initPosRow) {
-	this.initPosRow = initPosRow;
-    }
-
-    /**
-     * @return the initial position of the column
-     * @see TableOptions#initPosCol
-     */
-    public int getInitPosCol() {
-	return initPosCol;
-    }
-
-    /**
-     * @param initPosCol
-     *            the initial position of the column
-     * @see TableOptions#initPosCol
-     */
-    public void setInitPosCol(final int initPosCol) {
-	this.initPosCol = initPosCol;
-    }
-
-    /**
-     * @return if the columns will be auto size
-     * @see TableOptions#autosize
-     */
-    public boolean isAutosize() {
-	return autosize;
-    }
-
-    /**
-     * @param autosize
-     *            if the columns will be autosize
-     * @see TableOptions#autosize
-     */
-    public void setAutosize(final boolean autosize) {
-	this.autosize = autosize;
-    }
-
-    /**
-     * @return the cell style being used on the titles
-     * @see TableOptions#titlesStyle
-     */
-    public CellStyle getTitlesStyle() {
-	return titlesStyle;
-    }
-
-    /**
+     * <b>Default:</b> {@literal null}
+     *
      * @param titlesStyle
-     *            the cell style being used on the titles
-     * @see TableOptions#titlesStyle
+     *            the cell style used on titles
      */
     public void setTitlesStyle(final CellStyle titlesStyle) {
-	this.titlesStyle = titlesStyle;
+        this.titlesStyle = titlesStyle;
     }
 
     /**
-     * @return the cell style being used on the rest of cells
-     * @see TableOptions#fieldsStyle
+     * <b>Meaning:</b> Cell style applied to fields <br>
+     * <b>Default:</b> {@literal null}
+     *
+     * @return the cell style being used on fields
      */
     public CellStyle getFieldsStyle() {
-	return fieldsStyle;
+        return fieldsStyle;
     }
 
     /**
+     * <b>Meaning:</b> Cell style applied to fields <br>
+     * <b>Default:</b> {@literal null}
+     *
      * @param fieldsStyle
-     *            the cell style being used on the rest of the cells
-     * @see TableOptions#fieldsStyle
+     *            the cell style being used on fields
      */
     public void setFieldsStyle(final CellStyle fieldsStyle) {
-	this.fieldsStyle = fieldsStyle;
+        this.fieldsStyle = fieldsStyle;
     }
 
     /**
+     * <b>Meaning:</b> Aggregate values in case they pass through several
+     * {@link Collection} or Arrays <br>
+     * <b>Default:</b> {@literal false}
+     *
      * @param aggregate
-     *            wherever if aggregates values
-     * @see TableOptions#aggregate
+     *            set to true if you want to aggregate the values when finds a
+     *            {@linkplain Collection} or an array or set to false if you don't
+     *            that need
      */
     public void setAggregate(final boolean aggregate) {
-	this.aggregate = aggregate;
+        this.aggregate = aggregate;
     }
 
     /**
-     * @return wherever if aggregates values
-     * @see TableOptions#aggregate
+     * <b>Meaning:</b> Aggregate values in case they pass through several
+     * {@link Collection} or Arrays <br>
+     * <b>Default:</b> {@literal false}
+     *
+     * @return Return true if you want to aggregate the values when finds a
+     *         {@linkplain Collection} or an array or false otherwise
      */
     public boolean isAggregate() {
-	return aggregate;
+        return aggregate;
     }
 
     /**
-     * @return The result of aggregating will be separated by it
-     * @see TableOptions#seperatorAgg
+     * <b>Meaning:</b> The result of aggregating will be separated by it<br>
+     * <b>Default:</b> {@literal ", "}
+     *
+     * @return The string that will separate each element of a group of elements
      */
     public String getSeperatorAgg() {
-	return seperatorAgg;
+        return seperatorAgg;
     }
 
     /**
+     * <b>Meaning:</b> The result of aggregating will be separated by it<br>
+     * <b>Default:</b> {@literal ", "}
+     *
      * @param seperatorAgg
-     *            The result of aggregating will be separated by it
-     * @see TableOptions#seperatorAgg
+     *            The string that will separate each element of a group of elements
      */
     public void setSeperatorAgg(final String seperatorAgg) {
-	this.seperatorAgg = seperatorAgg;
+        this.seperatorAgg = seperatorAgg;
+    }
+
+    /**
+     * @return If you want the titles style to prevail
+     * @see TableOptions#prevailTitlesStyle
+     */
+    /**
+     * <b>Meaning:</b> The bottom border of the titles will have the style of the
+     * titles instead of the top border of the fields<br>
+     * <b>Default:</b> {@literal true}<br>
+     * <b>Note:</b> Most templates do that
+     *
+     * @return Return true if you want the style of titles to prevail or false
+     *         otherwise
+     */
+    public boolean isPrevailTitlesStyle() {
+        return prevailTitlesStyle;
+    }
+
+    /**
+     * <b>Meaning:</b> The bottom border of the titles will have the style of the
+     * titles instead of the top border of the fields<br>
+     * <b>Default:</b> {@literal true}<br>
+     * <b>Note:</b> Most templates do that
+     *
+     * @param prevailTitlesStyle
+     *            Set true if you want the style of titles to prevail or false
+     *            otherwise
+     */
+    public void setPrevailTitlesStyle(final boolean prevailTitlesStyle) {
+        this.prevailTitlesStyle = prevailTitlesStyle;
     }
 
 }

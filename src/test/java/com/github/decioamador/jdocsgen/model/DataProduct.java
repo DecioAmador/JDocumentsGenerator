@@ -31,8 +31,8 @@ public class DataProduct {
     private static final Product[] PRODUCTS_PROTEIN;
     private static final Map<String, String> TRANSLATOR_PROTEIN;
 
-    private static final Product[] PRODUCTS_DAIRY;
-    private static final Map<String, String> TRANSLATOR_DAIRY;
+    private static final Product[] PRODUCTS_DAIRIES;
+    private static final Map<String, String> TRANSLATOR_DAIRIES;
 
     private static final Product[] PRODUCTS_GRAINS;
     private static final Map<String, String> TRANSLATOR_GRAINS;
@@ -62,8 +62,8 @@ public class DataProduct {
         PRODUCTS_PROTEIN = createProductsProtein();
         TRANSLATOR_PROTEIN = createProteinsTranslation();
 
-        PRODUCTS_DAIRY = createProductsDairy();
-        TRANSLATOR_DAIRY = createDairyTranslation();
+        PRODUCTS_DAIRIES = createProductsDairies();
+        TRANSLATOR_DAIRIES = createDairyTranslation();
 
         PRODUCTS_GRAINS = createProductsGrains();
         TRANSLATOR_GRAINS = createGrainsTranslation();
@@ -99,7 +99,7 @@ public class DataProduct {
         categories[3] = new Category(4L, "Dairy",
                 "All fluid milk and products made from milk, such as cheese, yogurt, ice cream and "
                         + "pudding, belong to the dairy group.");
-        categories[3].setProducts(Arrays.stream(getProductsDairy()).collect(Collectors.toSet()));
+        categories[3].setProducts(Arrays.stream(getProductsDairies()).collect(Collectors.toSet()));
 
         categories[4] = new Category(5L, "Grains",
                 "Foods such as wheat, rice, oats, barley or cornmeal belong in the grains food group.");
@@ -262,7 +262,7 @@ public class DataProduct {
         return map;
     }
 
-    private static Product[] createProductsDairy() {
+    private static Product[] createProductsDairies() {
         final Product[] dairy = new Product[6];
 
         dairy[0] = new Product(UUID.randomUUID().toString(), "Butter", "Made by churning fresh or "
@@ -410,7 +410,7 @@ public class DataProduct {
         }
 
         // Dairy
-        for (final Entry<String, String> entry : DataProduct.getTranslatorDairy().entrySet()) {
+        for (final Entry<String, String> entry : DataProduct.getTranslatorDairies().entrySet()) {
             props.setProperty(entry.getKey(), entry.getValue());
         }
 
@@ -443,8 +443,8 @@ public class DataProduct {
         return PRODUCTS_PROTEIN;
     }
 
-    public static Product[] getProductsDairy() {
-        return PRODUCTS_DAIRY;
+    public static Product[] getProductsDairies() {
+        return PRODUCTS_DAIRIES;
     }
 
     public static Product[] getProductsGrains() {
@@ -471,8 +471,8 @@ public class DataProduct {
         return TRANSLATOR_PROTEIN;
     }
 
-    public static Map<String, String> getTranslatorDairy() {
-        return TRANSLATOR_DAIRY;
+    public static Map<String, String> getTranslatorDairies() {
+        return TRANSLATOR_DAIRIES;
     }
 
     public static Map<String, String> getTranslatorGrains() {

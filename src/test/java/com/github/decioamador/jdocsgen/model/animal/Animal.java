@@ -13,6 +13,7 @@ public abstract class Animal {
 
     public Animal(final String kingdom, final String specie, final double weight, final Set<Transport> transport,
             final Calendar birthdate) {
+        this.kingdom = kingdom;
         this.specie = specie;
         this.weight = weight;
         this.transport = transport;

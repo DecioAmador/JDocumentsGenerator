@@ -3,60 +3,78 @@ package com.github.decioamador.jdocsgen.text;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import com.github.decioamador.jdocsgen.model.DataAnimal;
+import com.github.decioamador.jdocsgen.model.animal.Animal;
+import com.github.decioamador.jdocsgen.translation.Translator;
 import com.github.decioamador.jdocsgen.translation.TranslatorCollection;
+import com.github.decioamador.jdocsgen.translation.TranslatorHelper;
 
 public class TextGeneratorDemo {
 
     public static void main(final String[] args) throws Exception {
-        final String filename = "demo.docx";
-        final String filename2 = "demo2.docx";
 
-        final List<String> labels = Arrays.asList("Referencia", "Data", "Id", "Nome", "Uuid2", "Rotulo", "Uuid3",
-                "Numero"); // PT
+        // Create document
+        final XWPFDocument document = new XWPFDocument();
 
-        final List<String> fields = Arrays.asList("uuid", "date", "id", "name", "model2.uuid", "model2.label",
-                "model2.model3.uuid", "model2.model3.number");
+        // Titles / Labels
+        final String[] titles = new String[] { "Kingdom", "Specie", "Weight", "Birthdate", "Transport" };
 
-        final TranslatorCollection translator = new TranslatorCollection();
+        // Fields
+        final String[] fields = new String[] { "kingdom", "specie", "weight", "birthdate", "transport" };
 
-        translator.setMap(new HashMap<>()); // EN to PT
-        translator.getMap().put("people", "pessoas");
-        translator.getMap().put("life", "vida");
-        translator.getMap().put("time", "tempo");
-        translator.getMap().put("world", "mundo");
+        // Animals
+        final List<Animal> objs = Arrays.asList(DataAnimal.getAnimals1());
 
-        translator.setFieldsToMap(new HashSet<>());
-        translator.getFieldsToMap().add("name");
+        // Translator
+        final TranslatorCollection transCol = new TranslatorCollection();
 
-        translator.setFieldsToFormat(new HashMap<>());
-        translator.getFieldsToFormat().put("date", new SimpleDateFormat("yyyy-MM-dd"));
+        transCol.setRawPrint(new HashSet<>());
+        Collections.addAll(transCol.getRawPrint(), "kingdom", "specie");
 
+        transCol.setFieldsToFormat(new HashMap<>());
+        transCol.getFieldsToFormat().put("birthdate", new SimpleDateFormat("dd/MM/yyyy"));
+
+        final NumberFormat nf = DecimalFormat.getInstance(Locale.ENGLISH);
+        nf.setMaximumFractionDigits(2);
+        transCol.getFieldsToFormat().put("weight", nf);
+
+        transCol.setFieldsToMap(new HashSet<>());
+        transCol.getFieldsToMap().add("transport");
+        transCol.setMap(new HashMap<>());
+        transCol.getMap().put("TERRESTRIAL", "Terrestrial");
+        transCol.getMap().put("AQUATIC", "Aquatic");
+        transCol.getMap().put("AIR", "Air");
+
+        final Translator translator = new TranslatorHelper(transCol);
+
+        // Options
         final TextOptions options = new TextOptions();
         options.setBetweenLabelAndField(" - ");
+        options.setSeperatorAgg("; ");
+        options.setAggregate(true);
 
-        XWPFDocument document = new XWPFDocument();
+        // Generate text based documents
         try (TextGenerator tg = new TextGenerator(document);
-                OutputStream os = Files.newOutputStream(Paths.get(filename))) {
+                OutputStream os = Files.newOutputStream(Paths.get("./demo.docx"))) {
 
-            // for (final Object o : objs) {
-            // tg.generateParagraph(o, options, labels, fields, translator);
-            // }
+            tg.generateTable(objs, options, titles, fields, translator);
 
-            tg.write(os);
-        }
+            for (final Object o : objs) {
+                tg.generateParagraph(o, options, titles, fields, translator);
+            }
 
-        document = new XWPFDocument();
-        try (TextGenerator tg = new TextGenerator(document);
-                OutputStream os = Files.newOutputStream(Paths.get(filename2))) {
-            // tg.generateTable(objs, labels, fields, translator);
             tg.write(os);
         }
     }

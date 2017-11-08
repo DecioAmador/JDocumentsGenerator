@@ -69,7 +69,7 @@ public class Price implements Comparable<Price> {
     public int compareTo(final Price o) {
         int result = 1;
         if (o != null) {
-            result = Double.valueOf(this.value).compareTo(o.value);
+        	return Double.compare(this.value, o.value);
         }
         return result;
     }

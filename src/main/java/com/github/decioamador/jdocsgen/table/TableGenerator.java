@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,44 +15,49 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 
 import com.github.decioamador.jdocsgen.translation.Translator;
+import com.github.decioamador.jdocsgen.translation.TranslatorUtils;
 import com.github.decioamador.jdocsgen.utils.FieldResolution;
 
 /**
- * This class has the purpose generating tables
+ * This class has the purpose generating table based documents
  */
 public class TableGenerator implements AutoCloseable {
 
     private final Workbook workbook;
 
     /**
-     * Contructor of TableGenerator
+     * Creates a {@linkplain TableGenerator} by using a specified instance of a
+     * {@link Workbook}
      *
      * @param workbook
-     *            Workbook that will be used
+     *            High level representation of a Excel workbook.
      */
     public TableGenerator(final Workbook workbook) {
         this.workbook = Objects.requireNonNull(workbook);
     }
 
     /**
-     * It generates the document base on the arguments
+     * Create a new {@linkplain Sheet} for the wrapped {@linkplain Workbook}.
+     * Generates a table that the objects will be represented in each line and the
+     * titles will be put in the line above. Return the sheet created.
      *
      * @param sheetName
-     *            The name of the sheet
+     *            The name to set for the sheet.
      * @param options
-     *            Options to generate this table
+     *            Options to generate this table ({@link TableOptions})
      * @param objs
-     *            Objects that will be the lines
+     *            Objects that will represent the lines of the table
      * @param titles
-     *            The title of the columns
+     *            An array that each element is the title for a column
      * @param fields
-     *            The path of the field
+     *            An array that each element is an EL path for a field
      * @param translator
-     *            A translator being used
-     * @return the sheet being used
+     *            Gives the user an opportunity to change the value of a field by
+     *            another (internationalization, format currency, format dates)
+     * @return A {@linkplain Sheet} that contains the information in table
      */
     public Sheet generateTable(final String sheetName, final TableOptions options, final Collection<?> objs,
-            final List<String> titles, final List<String> fields, final Translator translator) {
+            final String[] titles, final String[] fields, final Translator translator) {
 
         final Sheet sheet = workbook.createSheet(sheetName);
         generateTable(sheet, options, objs, titles, fields, translator);
@@ -61,65 +65,79 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * It generates the document base on the arguments
+     * Generates a table that the objects will be represented in each line and the
+     * titles will be put in the line above.
      *
      * @param sheet
-     *            Sheet to put the table
+     *            A {@linkplain Sheet} that should be created from the wrapped
+     *            {@linkplain Workbook}
      * @param options
-     *            Options to generate this table
+     *            Options to generate this table ({@link TableOptions})
      * @param objs
-     *            Objects that will be the lines
+     *            Objects that will represent the lines of the table
      * @param titles
-     *            The title of the columns
+     *            An array that each element is the title for a column
      * @param fields
-     *            The path of the field
+     *            An array that each element is an EL path for a field
      * @param translator
-     *            A translator being used
+     *            Gives the user an opportunity to change the value of a field by
+     *            another (internationalization, format currency, format dates)
      */
     public void generateTable(final Sheet sheet, final TableOptions options, final Collection<?> objs,
-            final List<String> titles, final List<String> fields, final Translator translator) {
+            final String[] titles, final String[] fields, final Translator translator) {
 
-        int rowNum = options.getInitPosRow(), columnNum = options.getInitPosCol();
-        final int firstLineField = options.getInitPosRow() + 1;
+        final boolean prevailTitlesStyle = options.isPrevailTitlesStyle();
+        final boolean hasTitlesStyle = options.getTitlesStyle() != null;
+        final boolean hasStyle = options.getFieldsStyle() != null;
         final boolean agg = options.isAggregate();
+        final int firstLineField = options.getInitPosRow() + 1;
+        int rowNum = options.getInitPosRow();
+        int columnNum;
         String translated;
-        boolean hasStyle;
+        final String sep = options.getSeperatorAgg();
         Object o;
 
         CellStyle fieldStyle;
         Cell cell;
         Row row;
 
+        // Generate titles
         row = sheet.createRow(rowNum++);
         generateTitles(row, options, titles);
 
-        hasStyle = options.getFieldsStyle() != null;
         for (final Object obj : objs) {
             if (obj != null) {
+
+                // Create row
                 columnNum = options.getInitPosCol();
                 row = sheet.createRow(rowNum);
+
                 for (final String field : fields) {
+
+                    // Create cell
+                    cell = row.createCell(columnNum++);
+
+                    // Resolve field
                     if (agg) {
                         o = FieldResolution.resolveFieldAggregation(obj, field);
                     } else {
                         o = FieldResolution.resolveField(obj, field);
                     }
 
-                    cell = row.createCell(columnNum++);
-
+                    // Translate
                     if (o != null) {
-                        translated = translateObject(options, translator, o, field);
+                        translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 
                         if (translated != null) {
                             cell.setCellValue(translated);
                         }
                     }
 
+                    // Apply style
                     if (hasStyle) {
                         fieldStyle = options.getFieldsStyle();
 
-                        // Prevail the title style
-                        if (rowNum == firstLineField && options.getTitlesStyle() != null) {
+                        if (prevailTitlesStyle && hasTitlesStyle && rowNum == firstLineField) {
                             fieldStyle = prevailTitlesStyle(options);
                         }
                         cell.setCellStyle(fieldStyle);
@@ -129,15 +147,17 @@ public class TableGenerator implements AutoCloseable {
             }
         }
 
-        autosizeColumns(sheet, options, titles.size());
+        autoSizeColumns(sheet, options, titles.length);
     }
 
     /**
      * Prevail bottom border titles<br>
+     * It will set the top border line of the first field as the bottom border of
+     * the titles <br>
      * Most templates do this
-     * 
+     *
      * @param options
-     *            Options being used
+     *            Options to generate this table ({@link TableOptions})
      * @param fieldStyle
      *            style being used on fields
      * @return Style for the first line in the fields
@@ -151,47 +171,17 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * Translate an object to a {@link String}
-     *
-     * @param options
-     *            Options being used
-     * @param translator
-     *            translator used to resolve fields
-     * @param agg
-     *            wherever you want to aggregate fields
-     * @param o
-     *            object that you want to resolve
-     * @param field
-     *            field used
-     * @return the translated value of an object
-     */
-    private String translateObject(final TableOptions options, final Translator translator, final Object o,
-            final String field) {
-        Object temp = o;
-        String translated;
-        if (options.isAggregate() && (temp instanceof Collection || temp.getClass().isArray())) {
-            if (o instanceof Collection) {
-                temp = ((Collection<?>) o).toArray();
-            }
-
-            translated = translator.getValue((Object[]) temp, field, options.getSeperatorAgg());
-        } else {
-            translated = translator.getValue(temp, field);
-        }
-        return translated;
-    }
-
-    /**
-     * Generates the titles
+     * Puts the titles on the first line of the table, just above the fields
      *
      * @param row
-     *            the row that you want to put the titles
+     *            The row that will be used to put the titles
      * @param options
-     *            options being used
+     *            Options to generate this table ({@link TableOptions}). In this
+     *            case are used to give the position of the titles and their style
      * @param titles
-     *            titles to put on the row
+     *            An array of String in each element is a title
      */
-    private void generateTitles(final Row row, final TableOptions options, final List<String> titles) {
+    private void generateTitles(final Row row, final TableOptions options, final String[] titles) {
         final boolean hasStyle = options.getTitlesStyle() != null;
         int columnNum = options.getInitPosCol();
         Cell cell;
@@ -199,6 +189,7 @@ public class TableGenerator implements AutoCloseable {
         for (final String title : titles) {
             cell = row.createCell(columnNum++);
             cell.setCellValue(title);
+
             if (hasStyle) {
                 cell.setCellStyle(options.getTitlesStyle());
             }
@@ -206,19 +197,19 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * Autosize the columns
+     * Auto size the columns, i.e. adjust the size of the columns to its content
      *
      * @param sheet
-     *            sheet being used
+     *            A {@linkplain Sheet}
      * @param options
-     *            options being used
-     * @param titlesSize
-     *            size of the titles
+     *            A {@linkplain TableOptions}
+     * @param columnsNum
+     *            The numbers of columns in the table
      */
-    private void autosizeColumns(final Sheet sheet, final TableOptions options, final int titlesSize) {
-        if (options.isAutosize()) {
+    private void autoSizeColumns(final Sheet sheet, final TableOptions options, final int columnsNum) {
+        if (options.isAutoSize()) {
             final boolean track = sheet instanceof SXSSFSheet;
-            for (int i = options.getInitPosCol(); i < options.getInitPosCol() + titlesSize; i++) {
+            for (int i = options.getInitPosCol(); i < options.getInitPosCol() + columnsNum; i++) {
                 if (track) {
                     ((SXSSFSheet) sheet).trackColumnForAutoSizing(i);
                 }
@@ -228,9 +219,10 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * Writes the generated document on the stream
+     * Writes the generated document on the stream and return a stream to read
      *
-     * @return ByteArrayInputStream it was the content of the file generated
+     * @return {@linkplain ByteArrayInputStream} it was the content of the file
+     *         generated
      * @throws IOException
      *             If an I/O error occurs. In particular, an IOException may be
      *             thrown if the output stream has been closed.
@@ -242,7 +234,7 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * Writes the generated document on the stream, writing on the existing one
+     * Writes the generated document on the stream
      *
      * @param outputStream
      *            OutputStream that will have the content
@@ -263,8 +255,8 @@ public class TableGenerator implements AutoCloseable {
     }
 
     /**
-     * Workbook that is being used by the {@link TableGenerator}
-     * 
+     * Workbook that is wrapped inside this instance of the {@link TableGenerator}
+     *
      * @return workbook being used
      */
     public Workbook getWorkbook() {
