@@ -12,23 +12,23 @@
 	<description>The objective is to generate documents.</description>
 
 	<properties>
-	    <java.version>1.8</java.version>
-	    <char.encoding>UTF-8</char.encoding>
-		
+		<java.version>1.8</java.version>
+		<char.encoding>UTF-8</char.encoding>
+
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-  		<maven.compiler.target>${java.version}</maven.compiler.target>
-  		
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+
 		<project.build.sourceEncoding>${char.encoding}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${char.encoding}</project.reporting.outputEncoding>
-		
-        <junit.version>4.12</junit.version>
+
+		<junit.version>4.12</junit.version>
 		<junit.jupiter.version>5.0.1</junit.jupiter.version>
 		<junit.vintage.version>${junit.version}.1</junit.vintage.version>
 		<junit.platform.version>1.0.1</junit.platform.version>
-  		
+
 		<poi.version>3.17</poi.version>
 	</properties>
-	
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -36,6 +36,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<name>Décio Amador</name>
+			<email>decio.amador@hotmail.com</email>
+		</developer>
+	</developers>
 
 	<issueManagement>
 		<url>https://github.com/DecioAmador/Jdocuments-generator/issues</url>
@@ -62,7 +69,7 @@
 
 	<build>
 		<plugins>
-		
+
 			<!-- GPG -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -137,45 +144,45 @@
 					<goals>deploy</goals>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-	            <artifactId>maven-surefire-plugin</artifactId>
-	            <version>2.19</version>
-	            <configuration>
-	            	<includes>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<configuration>
+					<includes>
 						<include>**/*Tests.java</include>
 					</includes>
-	            </configuration>
-	            <dependencies>
-	                <dependency>
+				</configuration>
+				<dependencies>
+					<dependency>
 						<groupId>org.junit.platform</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>${junit.platform.version}</version>
 					</dependency>
-	            </dependencies>
-	        </plugin>
+				</dependencies>
+			</plugin>
 
 		</plugins>
-		
+
 	</build>
 
 	<dependencies>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>${poi.version}</version>
 		</dependency>
-	
+
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-	    <dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -215,7 +222,7 @@
 			<version>${junit.vintage.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 </project>
