@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -136,9 +137,20 @@ public class TextGeneratorTests {
             for (int i = 0; i < nonNullObjs + 1; i++) {
                 final XWPFTableRow row = table.getRow(i);
                 assertNotNull(row);
+
+                // Check paragraphs content
                 for (int j = 0; j < fields.length; j++) {
                     final XWPFTableCell cell = row.getCell(j);
                     assertNotNull(cell);
+                    assertNotNull(cell.getParagraphs());
+                    assertFalse(cell.getParagraphs().isEmpty());
+
+                    for (final XWPFParagraph paragraph : cell.getParagraphs()) {
+                        assertNotNull(paragraph);
+                        assertNotNull(paragraph.getCTP());
+                        assertNotNull(paragraph.getCTP().newCursor().getTextValue());
+                        assertFalse(paragraph.getCTP().newCursor().getTextValue().isEmpty());
+                    }
                 }
             }
         }
@@ -170,12 +182,15 @@ public class TextGeneratorTests {
     @ParameterizedTest
     @MethodSource("writeArguments")
     public void writeInputStream(final TextGenerator tg) throws Exception {
+        InputStream bais = null;
+        assertNotNull(tg.getDocument());
         try {
-            assertNotNull(tg.getDocument());
-            final InputStream bais = tg.write();
+            bais = tg.write();
             assertTrue(bais.available() > 50);
-            bais.close();
         } finally {
+            if (bais != null) {
+                bais.close();
+            }
             tg.close();
         }
     }
@@ -183,16 +198,21 @@ public class TextGeneratorTests {
     @ParameterizedTest
     @MethodSource("writeArguments")
     public void writeOutputStream(final TextGenerator tg) throws Exception {
+        OutputStream os = null;
+        final Path p = Paths
+                .get(String.format(".%cwriteTest%s.xlsx", File.separatorChar, UUID.randomUUID().toString()));
+        assertNotNull(tg.getDocument());
         try {
-            final Path p = Paths.get(String.format("./writeTest%s.xlsx", UUID.randomUUID().toString()));
-            final OutputStream os = Files.newOutputStream(p);
+            os = Files.newOutputStream(p);
             assertNotNull(tg.getDocument());
             assertTrue(Files.size(p) == 0L);
             tg.write(os);
             assertTrue(Files.size(p) > 50L);
-            os.close();
-            Files.delete(p);
         } finally {
+            if (os != null) {
+                os.close();
+            }
+            Files.delete(p);
             tg.close();
 
         }

@@ -99,7 +99,6 @@ public class TableOptions {
     }
 
     /**
-     * <b>Expected type:</b> {@link CellStyle} <br>
      * <b>Meaning:</b> Cell style applied to titles <br>
      * <b>Default:</b> {@literal null}
      *
@@ -178,10 +177,6 @@ public class TableOptions {
         this.seperatorAgg = seperatorAgg;
     }
 
-    /**
-     * @return If you want the titles style to prevail
-     * @see TableOptions#prevailTitlesStyle
-     */
     /**
      * <b>Meaning:</b> The bottom border of the titles will have the style of the
      * titles instead of the top border of the fields<br>

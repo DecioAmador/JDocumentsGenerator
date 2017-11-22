@@ -40,7 +40,8 @@ public class TextGenerator implements AutoCloseable {
      * Create a new {@linkplain XWPFParagraph} for the wrapped
      * {@linkplain XWPFDocument}. Generates a paragraph for that the object will be
      * represented in each line is a field and the labels will be put behind the
-     * values of the fields. Return the paragraph created.
+     * values of the fields. Return the paragraph created. <br>
+     * The fields and labels should have the same order.
      *
      * @param obj
      *            Objects that will represent a paragraph in the text
@@ -71,18 +72,23 @@ public class TextGenerator implements AutoCloseable {
         if (obj != null) {
             for (int i = 0; i < fields.length; i++) {
                 field = fields[i];
+
+                // Resolve field
                 if (agg) {
                     o = FieldResolution.resolveFieldAggregation(obj, field);
                 } else {
                     o = FieldResolution.resolveField(obj, field);
                 }
 
+                // Put label
                 run = paragraph.createRun();
                 run.setText(labels[i]);
 
+                // Put a string between the label and the field
                 run = paragraph.createRun();
                 run.setText(options.getBetweenLabelAndField());
 
+                // Put field representation
                 if (o != null) {
                     translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 
@@ -131,27 +137,30 @@ public class TextGenerator implements AutoCloseable {
         final int countNonNullObjs = (int) objs.stream().filter(Objects::nonNull).count();
         final XWPFTable table = document.createTable(countNonNullObjs + 1, titles.length);
 
+        // Put titles
         XWPFTableRow row = table.getRow(rowNum++);
         for (int i = 0; i < titles.length; i++) {
             cell = row.getCell(i);
             cell.setText(titles[i]);
         }
 
+        // Put fields
         for (final Object obj : objs) {
             if (obj != null) {
                 row = table.getRow(rowNum++);
 
                 for (int i = 0; i < fields.length; i++) {
                     field = fields[i];
+                    cell = row.getCell(i);
 
+                    // Resolve field
                     if (agg) {
                         o = FieldResolution.resolveFieldAggregation(obj, field);
                     } else {
                         o = FieldResolution.resolveField(obj, field);
                     }
 
-                    cell = row.getCell(i);
-
+                    // Put field representation
                     if (o != null) {
                         translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 

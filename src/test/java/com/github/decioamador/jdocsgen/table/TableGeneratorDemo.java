@@ -1,5 +1,6 @@
 package com.github.decioamador.jdocsgen.table;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -43,8 +44,12 @@ public class TableGeneratorDemo {
 
         // Translator
         final TranslatorCollection transCollection = new TranslatorCollection();
+
+        // Prints by calling toString
         transCollection.setRawPrint(new HashSet<String>());
         transCollection.getRawPrint().addAll(Arrays.asList("uuid", "basicInfo.description", "prices"));
+
+        // Translate the name
         transCollection.setResourceBundleMap(new HashMap<>());
         transCollection.getResourceBundleMap().put("basicInfo.name", DataProduct.getResourceBundleProductsNames());
         final Translator translator = new TranslatorHelper(transCollection);
@@ -55,6 +60,7 @@ public class TableGeneratorDemo {
         options.setInitPosRow(2);
         options.setInitPosCol(1);
         options.setAggregate(true);
+        options.setPrevailTitlesStyle(true);
         options.setSeperatorAgg("; ");
 
         // Style for fields
@@ -79,8 +85,9 @@ public class TableGeneratorDemo {
 
         // Generate table based document
         try (TableGenerator tg = new TableGenerator(wb);
-                OutputStream os = Files.newOutputStream(Paths.get("./demo.xlsx"))) {
+                OutputStream os = Files.newOutputStream(Paths.get(String.format(".%cdemo.xlsx", File.separatorChar)))) {
 
+            // Generate sheets
             tg.generateTable("Fruits", options, fruits, titles, fields, translator);
             tg.generateTable("Vegetables", options, vegetables, titles, fields, translator);
             tg.generateTable("Proteins", options, proteins, titles, fields, translator);

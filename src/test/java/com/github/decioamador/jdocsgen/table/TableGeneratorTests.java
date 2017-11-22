@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -55,7 +56,8 @@ public class TableGeneratorTests {
         Workbook wb = new HSSFWorkbook();
         builder.add(wb);
 
-        builder.add(new XSSFWorkbook());
+        wb = new XSSFWorkbook();
+        builder.add(wb);
 
         wb = new SXSSFWorkbook();
         builder.add(wb);
@@ -147,7 +149,7 @@ public class TableGeneratorTests {
             final CellStyle styleTitles = wb.createCellStyle();
             styleTitles.cloneStyleFrom(styleFields);
             styleTitles.setRightBorderColor(IndexedColors.BLUE_GREY.getIndex());
-            styleTitles.setLeftBorderColor(IndexedColors.BRIGHT_GREEN1.getIndex());
+            styleTitles.setLeftBorderColor(IndexedColors.BRIGHT_GREEN.getIndex());
             styleTitles.setTopBorderColor(IndexedColors.VIOLET.getIndex());
             styleTitles.setBottomBorderColor(IndexedColors.BROWN.getIndex());
             options.setTitlesStyle(styleTitles);
@@ -578,12 +580,13 @@ public class TableGeneratorTests {
     @ParameterizedTest
     @MethodSource("writeArguments")
     public void writeInputStream(final TableGenerator tg) throws Exception {
+        InputStream bais = null;
+        assertNotNull(tg.getWorkbook());
         try {
-            assertNotNull(tg.getWorkbook());
-            final InputStream bais = tg.write();
+            bais = tg.write();
             assertTrue(bais.available() > 50);
-            bais.close();
         } finally {
+            bais.close();
             tg.close();
         }
     }
@@ -591,16 +594,21 @@ public class TableGeneratorTests {
     @ParameterizedTest
     @MethodSource("writeArguments")
     public void writeOutputStream(final TableGenerator tg) throws Exception {
+        OutputStream os = null;
+        assertNotNull(tg.getWorkbook());
+        final Path p = Paths
+                .get(String.format(".%cwriteTest%s.xlsx", File.separatorChar, UUID.randomUUID().toString()));
         try {
-            final Path p = Paths.get(String.format("./writeTest%s.xlsx", UUID.randomUUID().toString()));
-            final OutputStream os = Files.newOutputStream(p);
+            os = Files.newOutputStream(p);
             assertNotNull(tg.getWorkbook());
             assertTrue(Files.size(p) == 0L);
             tg.write(os);
             assertTrue(Files.size(p) > 50L);
-            os.close();
-            Files.delete(p);
         } finally {
+            if (os != null) {
+                os.close();
+            }
+            Files.delete(p);
             tg.close();
 
         }

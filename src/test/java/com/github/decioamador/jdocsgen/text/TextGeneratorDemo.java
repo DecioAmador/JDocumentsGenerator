@@ -1,5 +1,6 @@
 package com.github.decioamador.jdocsgen.text;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,16 +41,20 @@ public class TextGeneratorDemo {
         // Translator
         final TranslatorCollection transCol = new TranslatorCollection();
 
+        // Prints by calling toString
         transCol.setRawPrint(new HashSet<>());
         Collections.addAll(transCol.getRawPrint(), "kingdom", "specie");
 
+        // Formats the birth date
         transCol.setFieldsToFormat(new HashMap<>());
         transCol.getFieldsToFormat().put("birthdate", new SimpleDateFormat("dd/MM/yyyy"));
 
+        // Formats the weight
         final NumberFormat nf = DecimalFormat.getInstance(Locale.ENGLISH);
         nf.setMaximumFractionDigits(2);
         transCol.getFieldsToFormat().put("weight", nf);
 
+        // Translate into a more legible text
         transCol.setFieldsToMap(new HashSet<>());
         transCol.getFieldsToMap().add("transport");
         transCol.setMap(new HashMap<>());
@@ -67,14 +72,17 @@ public class TextGeneratorDemo {
 
         // Generate text based documents
         try (TextGenerator tg = new TextGenerator(document);
-                OutputStream os = Files.newOutputStream(Paths.get("./demo.docx"))) {
+                OutputStream os = Files.newOutputStream(Paths.get(String.format(".%cdemo.docx", File.separatorChar)))) {
 
+            // Generate table (each line represent each object)
             tg.generateTable(objs, options, titles, fields, translator);
 
+            // Generate paragraphs (each paragraph represent each object)
             for (final Object o : objs) {
                 tg.generateParagraph(o, options, titles, fields, translator);
             }
 
+            // Write document
             tg.write(os);
         }
     }
