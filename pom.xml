@@ -7,8 +7,8 @@
 	<version>2.1.0</version>
 	<packaging>jar</packaging>
 
-	<name>Jdocuments-generator</name>
-	<url>https://github.com/DecioAmador/Jdocuments-generator</url>
+	<name>JDocumentsGenerator</name>
+	<url>https://github.com/DecioAmador/JDocumentsGenerator</url>
 	<description>The objective is to generate documents.</description>
 
 	<properties>
@@ -45,14 +45,14 @@
 	</developers>
 
 	<issueManagement>
-		<url>https://github.com/DecioAmador/Jdocuments-generator/issues</url>
+		<url>https://github.com/DecioAmador/JDocumentsGenerator/issues</url>
 		<system>Github</system>
 	</issueManagement>
 
 	<scm>
-		<connection>scm:git:git@github.com:DecioAmador/Jdocuments-generator.git</connection>
-		<developerConnection>scm:git:git@github.com:DecioAmador/Jdocuments-generator.git</developerConnection>
-		<url>git@github.com:DecioAmador/Jdocuments-generator.git</url>
+		<connection>scm:git:git@github.com:DecioAmador/JDocumentsGenerator.git</connection>
+		<developerConnection>scm:git:git@github.com:DecioAmador/JDocumentsGenerator.git</developerConnection>
+		<url>git@github.com:DecioAmador/JDocumentsGenerator.git</url>
 	</scm>
 
 	<distributionManagement>
