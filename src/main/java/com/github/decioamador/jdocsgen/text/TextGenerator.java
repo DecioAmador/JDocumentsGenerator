@@ -134,7 +134,7 @@ public class TextGenerator implements AutoCloseable {
         XWPFTableCell cell;
         Object o;
 
-        final int countNonNullObjs = (int) objs.stream().filter(Objects::nonNull).count();
+        final int countNonNullObjs = countNonNulls(objs);
         final XWPFTable table = document.createTable(countNonNullObjs + 1, titles.length);
 
         // Put titles
@@ -173,6 +173,23 @@ public class TextGenerator implements AutoCloseable {
         }
 
         return table;
+    }
+
+    /**
+     * Counts non nulls objects
+     * 
+     * @param objs
+     *            Collection of objects
+     * @return number of non null objects
+     */
+    private int countNonNulls(final Collection<?> objs) {
+        int acc = 0;
+        for (final Object o : objs) {
+            if (o != null) {
+                acc++;
+            }
+        }
+        return acc;
     }
 
     /**
