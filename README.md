@@ -3,8 +3,6 @@ JDocumentsGenerator
 The objective is to generate documents.
 -----------
 
-Transforms an object into its own representation in a document.<br />
-Uses paths like in EL (Expression Language) to identify a field in an object.<br />
 One of the best ways to see how it works is to look at the demonstrations below.
 
 ### Table based documents
