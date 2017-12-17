@@ -1,6 +1,5 @@
 package com.github.decioamador.jdocsgen.table;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -85,7 +84,7 @@ public class TableGeneratorDemo {
 
         // Generate table based document
         try (TableGenerator tg = new TableGenerator(wb);
-                OutputStream os = Files.newOutputStream(Paths.get(String.format(".%cdemo.xlsx", File.separatorChar)))) {
+                OutputStream os = Files.newOutputStream(Paths.get("demo.xlsx"))) {
 
             // Generate sheets
             tg.generateTable("Fruits", options, fruits, titles, fields, translator);

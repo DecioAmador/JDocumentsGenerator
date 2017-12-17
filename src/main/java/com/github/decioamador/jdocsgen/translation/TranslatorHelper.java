@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 /**
  * Helper class to translate fields
@@ -27,25 +28,20 @@ public class TranslatorHelper implements Translator {
      */
     @Override
     public String getValue(final Object[] objs, final String field, final String sep) {
-        boolean notFirstElem = false;
         String result = null;
         String value;
 
         if (objs != null && objs.length != 0) {
-            final StringBuilder sb = new StringBuilder();
+            final StringJoiner sj = new StringJoiner(sep);
             for (int i = 0; i < objs.length; i++) {
                 value = getValue(objs[i], field);
                 if (value != null) {
-                    if (notFirstElem) {
-                        sb.append(sep);
-                    }
-                    sb.append(value);
-                    notFirstElem = true;
+                    sj.add(value);
                 }
             }
 
-            if (sb.length() != 0) {
-                result = sb.toString();
+            if (sj.length() != 0) {
+                result = sj.toString();
             }
         }
         return result;

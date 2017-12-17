@@ -3,9 +3,10 @@ package com.github.decioamador.jdocsgen.translation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
@@ -23,37 +24,31 @@ public class TranslatorUtilsTests {
         final Builder<Arguments> builder = Stream.builder();
 
         final TableGenerator tg = new TableGenerator(new XSSFWorkbook());
-        final TranslatorCollection translator = new TranslatorCollection();
-        translator.setRawPrint(new HashSet<String>());
-        translator.getRawPrint().add("arg1");
-        translator.getRawPrint().add("arg2");
-        translator.getRawPrint().add("arg3");
-        final TranslatorHelper transHelper = new TranslatorHelper(translator);
+        final TranslatorCollection transCol = new TranslatorCollection();
+        transCol.setRawPrint(new HashSet<String>());
+        transCol.getRawPrint().add("arg1");
+        transCol.getRawPrint().add("arg2");
+        transCol.getRawPrint().add("arg3");
+        final Translator translator = new TranslatorHelper(transCol);
 
         // Arg1 - Collection
-        final List<String> objs1 = new ArrayList<>(DataAnimal.getPets1().length);
-        for (int i = 0; i < DataAnimal.getPets1().length; i++) {
-            if (DataAnimal.getPets1()[i] != null) {
-                objs1.add(DataAnimal.getPets1()[i].getName());
-            } else {
-                objs1.add(null);
-            }
-        }
+        final List<Object> objs1 = Arrays.stream(DataAnimal.getPets1()).map(p -> p != null ? p.getName() : p)
+                .collect(Collectors.toList());
 
         final String expected1 = "Buddy; Duke; Tigger";
-        builder.add(Arguments.of(tg, true, "; ", transHelper, objs1, "arg1", expected1));
+        builder.add(Arguments.of(tg, true, "; ", translator, objs1, "arg1", expected1));
 
         // Arg2 - Array
         final Object objs2 = objs1.toArray();
         final String expected2 = "Buddy; Duke; Tigger";
-        builder.add(Arguments.of(tg, true, "; ", transHelper, objs2, "arg2", expected2));
+        builder.add(Arguments.of(tg, true, "; ", translator, objs2, "arg2", expected2));
 
         // Arg3 - Object
         final Object obj3 = "Kitty";
         final Object expected3 = "Kitty";
 
-        builder.add(Arguments.of(tg, true, ";", transHelper, obj3, "arg3", expected3));
-        builder.add(Arguments.of(tg, false, ";", transHelper, obj3, "arg3", expected3));
+        builder.add(Arguments.of(tg, true, ";", translator, obj3, "arg3", expected3));
+        builder.add(Arguments.of(tg, false, ";", translator, obj3, "arg3", expected3));
 
         return builder.build();
     }
@@ -61,10 +56,10 @@ public class TranslatorUtilsTests {
     @ParameterizedTest
     @MethodSource("translateObjectArguments")
     public void translateObject(final TableGenerator tg, final boolean agg, final String sep,
-            final TranslatorHelper transHelper, final Object o, final String field, final String expected)
-            throws Exception {
+            final Translator translator, final Object o, final String field, final String expected)
+                    throws Exception {
 
-        final String result = TranslatorUtils.translateObject(agg, sep, transHelper, o, field);
+        final String result = TranslatorUtils.translateObject(agg, sep, translator, o, field);
         assertNotNull(tg.getWorkbook());
         assertEquals(expected, result);
     }

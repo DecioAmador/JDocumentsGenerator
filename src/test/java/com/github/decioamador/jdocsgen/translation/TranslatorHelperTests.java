@@ -9,9 +9,11 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
@@ -47,14 +49,8 @@ public class TranslatorHelperTests {
 
         // Arg3
         final String field = "arg3";
-        final Object[] objs = new Object[DataAnimal.getPets2().length];
-        for (int i = 0; i < DataAnimal.getPets2().length; i++) {
-            if (DataAnimal.getPets2()[i] != null) {
-                objs[i] = DataAnimal.getPets2()[i].getName();
-            } else {
-                objs[i] = null;
-            }
-        }
+        final Object[] objs = Arrays.stream(DataAnimal.getPets2()).map(p -> p != null ? p.getName() : p).toArray();
+
         transHelper.getTranslatorCollection().setRawPrint(new HashSet<>());
         transHelper.getTranslatorCollection().getRawPrint().add(field);
         final String expected1 = "Daisy, Teddy, Rocky";
@@ -62,14 +58,7 @@ public class TranslatorHelperTests {
 
         // Agr4 - Different separator
         final String field2 = "arg4";
-        final Object[] objs2 = new Object[DataAnimal.getPets3().length];
-        for (int i = 0; i < DataAnimal.getPets3().length; i++) {
-            if (DataAnimal.getPets3()[i] != null) {
-                objs2[i] = DataAnimal.getPets3()[i].getName();
-            } else {
-                objs2[i] = null;
-            }
-        }
+        final Object[] objs2 = Arrays.stream(DataAnimal.getPets3()).map(p -> p != null ? p.getName() : p).toArray();
         transHelper.getTranslatorCollection().getRawPrint().add(field2);
         final String expected2 = "Oliver;Angel;Kitty";
         builder.add(Arguments.of(field2, transHelper, objs2, ";", expected2));
@@ -113,7 +102,7 @@ public class TranslatorHelperTests {
 
     @ParameterizedTest
     @MethodSource({ "getValueArguments", "getTranslatorCollectionValueArguments", "handleFormatArguments",
-            "handleDateTimeFormatArguments", "handleResourceBundleArguments", "handleMapArgumentsWithField" })
+        "handleDateTimeFormatArguments", "handleResourceBundleArguments", "handleMapArgumentsWithField" })
     public void getValue(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -157,7 +146,7 @@ public class TranslatorHelperTests {
 
     @ParameterizedTest
     @MethodSource({ "getTranslatorCollectionValueArguments", "handleFormatArguments", "handleDateTimeFormatArguments",
-            "handleResourceBundleArguments" })
+    "handleResourceBundleArguments" })
     public void getTranslatorCollectionValue(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -264,13 +253,13 @@ public class TranslatorHelperTests {
 
         builder.add(Arguments.of("birthdate", transHelper, DataAnimal.getAnimals1()[1].getBirthdate(), expected1));
 
-        final NumberFormat nf = DecimalFormat.getCurrencyInstance();
+        final NumberFormat nf = DecimalFormat.getCurrencyInstance(Locale.ENGLISH);
         nf.setMaximumFractionDigits(2);
         nf.setMinimumFractionDigits(2);
         nf.setCurrency(DataProduct.getEuro());
 
         translator.getFieldsToFormat().put("price", nf);
-        final String expected2 = "12,35 €";
+        final String expected2 = "EUR12.35";
 
         builder.add(Arguments.of("price", transHelper, 12.34568, expected2));
 

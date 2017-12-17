@@ -1,6 +1,5 @@
 package com.github.decioamador.jdocsgen.text;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -72,7 +71,7 @@ public class TextGeneratorDemo {
 
         // Generate text based documents
         try (TextGenerator tg = new TextGenerator(document);
-                OutputStream os = Files.newOutputStream(Paths.get(String.format(".%cdemo.docx", File.separatorChar)))) {
+                OutputStream os = Files.newOutputStream(Paths.get("demo.docx"))) {
 
             // Generate table (each line represent each object)
             tg.generateTable(objs, options, titles, fields, translator);

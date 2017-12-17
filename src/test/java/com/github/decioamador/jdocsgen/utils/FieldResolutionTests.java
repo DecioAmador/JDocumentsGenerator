@@ -8,11 +8,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
@@ -121,40 +123,19 @@ public class FieldResolutionTests {
         final Object obj1 = DataAnimal.getAssociation1();
         final String field1 = "members.animals.specie";
 
-        final List<Animal> animals = new ArrayList<>();
-        final List<Farm> farms = DataAnimal.getAssociation1().getMembers();
-        for (final Farm f : farms) {
-            if (f != null) {
-                for (final Animal a : f.getAnimals()) {
-                    if (a != null) {
-                        animals.add(a);
-                    } else {
-                        animals.add(null);
-                    }
-                }
-            }
-        }
+        final List<Animal> animals = DataAnimal.getAssociation1().getMembers().stream().filter(Objects::nonNull)
+                .map(Farm::getAnimals).flatMap(Collection::stream).collect(Collectors.toList());
 
-        final List<String> species = new ArrayList<>();
-        for (final Animal a : animals) {
-            if (a != null) {
-                species.add(a.getSpecie());
-            } else {
-                species.add(null);
-            }
-        }
-        final Object[] expected1 = species.toArray();
+        final Object[] expected1 = animals.stream().map(a -> a != null ? a.getSpecie() : a)
+                .toArray();
         builder.add(Arguments.of(obj1, field1, expected1, true));
 
         // Arg2 - Association<Farm>/List<Farm>/List<Animal>/Set<Transport>
         final Object obj2 = DataAnimal.getAssociation1();
         final String field2 = "members.animals.transport";
 
-        final List<Transport> transports = new ArrayList<>();
-        animals.stream().filter((final Animal a) -> a != null)
-                .forEach((final Animal a) -> transports.addAll(a.getTransport()));
-
-        final Object[] expected2 = transports.toArray();
+        final Object[] expected2 = animals.stream().filter((final Animal a) -> a != null).map(Animal::getTransport)
+                .flatMap(Collection::stream).toArray(size -> new Object[size]);
         builder.add(Arguments.of(obj2, field2, expected2, true));
 
         // Arg3 - BasicInfo/String
@@ -208,13 +189,13 @@ public class FieldResolutionTests {
 
             if (expectArray) {
                 @SuppressWarnings({ "unchecked", "rawtypes" })
-                final Comparator<Object> comp = (final Object a, final Object b) -> {
+                final Comparator<Object> comp = (a, b) -> {
                     if (a == null) {
                         return 1;
                     } else if (b == null) {
                         return -1;
                     } else {
-                        return ((Comparable) a).compareTo((Comparable) b);
+                        return ((Comparable) a).compareTo(b);
                     }
                 };
 
@@ -254,12 +235,8 @@ public class FieldResolutionTests {
         final Method paramMth1 = Product.class.getDeclaredMethod("getUuid");
 
         final Product[] prods = DataProduct.getProductsFruits();
-        final String[] expected1 = new String[prods.length];
-        for (int i = 0; i < DataProduct.getProductsFruits().length; i++) {
-            if (prods[i] != null) {
-                expected1[i] = prods[i].getUuid();
-            }
-        }
+        final String[] expected1 = Arrays.stream(prods).map(p -> p != null ? p.getUuid() : p)
+                .toArray(size -> new String[size]);
         builder.add(Arguments.of(paramObj1, paramMth1, expected1, true));
 
         // Arg2 - Array and the elements are collections
@@ -270,7 +247,7 @@ public class FieldResolutionTests {
 
         final Object[] expected2 = Stream
                 .concat(Arrays.stream(DataProduct.getProductsGrains()), Arrays.stream(DataProduct.getProductsOils()))
-                .toArray();
+                .toArray(size -> new Object[size]);
         builder.add(Arguments.of(paramObj2, paramMth2, expected2, true));
 
         // Arg3 - Not array
@@ -297,13 +274,13 @@ public class FieldResolutionTests {
 
         if (expectArray) {
             @SuppressWarnings({ "unchecked", "rawtypes" })
-            final Comparator<Object> comp = (final Object a, final Object b) -> {
+            final Comparator<Object> comp = (a, b) -> {
                 if (a == null) {
                     return 1;
                 } else if (b == null) {
                     return -1;
                 } else {
-                    return ((Comparable) a).compareTo((Comparable) b);
+                    return ((Comparable) a).compareTo(b);
                 }
             };
 
@@ -417,17 +394,11 @@ public class FieldResolutionTests {
         aggCollection.setAccessible(true);
 
         // Pass arrays to collections
-        Object[] aux;
-        for (int i = 0; i < param.length; i++) {
-            aux = (Object[]) param[i];
-            if (aux == null) {
-                param[i] = aux;
-            } else {
-                param[i] = Arrays.asList(aux);
-            }
-        }
+        final Object[] param2 = Arrays.stream(param)
+                .map(o -> o != null ? Arrays.asList((Object[]) o) : o)
+                .toArray(size -> new Object[size]);
 
-        result = (Object[]) aggCollection.invoke(null, new Object[] { param });
+        result = (Object[]) aggCollection.invoke(null, new Object[] { param2 });
         assertArrayEquals(expected, result);
     }
 

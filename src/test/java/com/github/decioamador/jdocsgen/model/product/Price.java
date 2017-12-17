@@ -3,6 +3,7 @@ package com.github.decioamador.jdocsgen.model.product;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Price implements Comparable<Price> {
@@ -67,7 +68,7 @@ public class Price implements Comparable<Price> {
 
     @Override
     public int compareTo(final Price o) {
-        int result = 1;
+        final int result = 1;
         if (o != null) {
         	return Double.compare(this.value, o.value);
         }
@@ -76,7 +77,7 @@ public class Price implements Comparable<Price> {
 
     @Override
     public String toString() {
-        final NumberFormat nf = DecimalFormat.getCurrencyInstance();
+        final NumberFormat nf = DecimalFormat.getCurrencyInstance(Locale.ENGLISH);
         nf.setMaximumFractionDigits(2);
         nf.setMinimumFractionDigits(2);
         nf.setCurrency(currency);

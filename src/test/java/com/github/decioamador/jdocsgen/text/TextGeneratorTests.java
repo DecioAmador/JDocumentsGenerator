@@ -149,7 +149,7 @@ public class TextGeneratorTests {
                         assertNotNull(paragraph);
                         assertNotNull(paragraph.getCTP());
                         assertNotNull(paragraph.getCTP().newCursor().getTextValue());
-                        assertFalse(paragraph.getCTP().newCursor().getTextValue().isEmpty());
+                        assertFalse(paragraph.getCTP().newCursor().getTextValue().trim().isEmpty());
                     }
                 }
             }
