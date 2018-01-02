@@ -35,7 +35,7 @@ import com.github.decioamador.jdocsgen.model.product.Product;
 
 public class FieldResolutionTests {
 
-    static Stream<Arguments> resolveFieldArguments() {
+    static Stream<Arguments> resolveFieldArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1 - BasicInfo/String
@@ -66,7 +66,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource("resolveFieldArguments")
+    @MethodSource("resolveFieldArgs")
     public void resolveField(final Object obj, final String field, final Object expected) throws Exception {
 
         final Object result = FieldResolution.resolveField(obj, field);
@@ -77,7 +77,7 @@ public class FieldResolutionTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> resolveFieldExceptionsArguments() {
+    static Stream<Arguments> resolveFieldExceptionsArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1 - The method doesn't exist
@@ -103,7 +103,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource("resolveFieldExceptionsArguments")
+    @MethodSource("resolveFieldExceptionsArgs")
     public void resolveFieldExceptions(final Object obj, final String field, final Class<?> exception)
             throws Exception {
 
@@ -116,7 +116,7 @@ public class FieldResolutionTests {
         }
     }
 
-    static Stream<Arguments> resolveFieldAggregationArguments() {
+    static Stream<Arguments> resolveFieldAggregationArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1 - Association<Farm>/List<Farm>/List<Animal>/String
@@ -126,7 +126,7 @@ public class FieldResolutionTests {
         final List<Animal> animals = DataAnimal.getAssociation1().getMembers().stream().filter(Objects::nonNull)
                 .map(Farm::getAnimals).flatMap(Collection::stream).collect(Collectors.toList());
 
-        final Object[] expected1 = animals.stream().map(a -> a != null ? a.getSpecie() : a)
+        final Object[] expected1 = animals.stream().map(a -> a != null ? a.getSpecie() : null)
                 .toArray();
         builder.add(Arguments.of(obj1, field1, expected1, true));
 
@@ -135,7 +135,7 @@ public class FieldResolutionTests {
         final String field2 = "members.animals.transport";
 
         final Object[] expected2 = animals.stream().filter((final Animal a) -> a != null).map(Animal::getTransport)
-                .flatMap(Collection::stream).toArray(size -> new Object[size]);
+                .flatMap(Collection::stream).toArray();
         builder.add(Arguments.of(obj2, field2, expected2, true));
 
         // Arg3 - BasicInfo/String
@@ -176,7 +176,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource("resolveFieldAggregationArguments")
+    @MethodSource("resolveFieldAggregationArgs")
     public void resolveFieldAggregation(final Object obj, final String field, final Object expected,
             final boolean expectArray) throws Exception {
 
@@ -214,7 +214,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource("resolveFieldExceptionsArguments")
+    @MethodSource("resolveFieldExceptionsArgs")
     public void resolveFieldAggregationExceptions(final Object obj, final String field, final Class<?> exception)
             throws Exception {
 
@@ -227,7 +227,7 @@ public class FieldResolutionTests {
         }
     }
 
-    static Stream<Arguments> resolveMethodAggregationArguments() throws Exception {
+    static Stream<Arguments> resolveMethodAggregationArgs() throws Exception {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1 - Array and the elements are NOT arrays or collections
@@ -235,7 +235,7 @@ public class FieldResolutionTests {
         final Method paramMth1 = Product.class.getDeclaredMethod("getUuid");
 
         final Product[] prods = DataProduct.getProductsFruits();
-        final String[] expected1 = Arrays.stream(prods).map(p -> p != null ? p.getUuid() : p)
+        final String[] expected1 = Arrays.stream(prods).map(p -> p != null ? p.getUuid() : null)
                 .toArray(size -> new String[size]);
         builder.add(Arguments.of(paramObj1, paramMth1, expected1, true));
 
@@ -247,7 +247,7 @@ public class FieldResolutionTests {
 
         final Object[] expected2 = Stream
                 .concat(Arrays.stream(DataProduct.getProductsGrains()), Arrays.stream(DataProduct.getProductsOils()))
-                .toArray(size -> new Object[size]);
+                .toArray();
         builder.add(Arguments.of(paramObj2, paramMth2, expected2, true));
 
         // Arg3 - Not array
@@ -261,7 +261,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource("resolveMethodAggregationArguments")
+    @MethodSource("resolveMethodAggregationArgs")
     public void resolveMethodAggregation(final Object obj, final Method m, final Object expected,
             final boolean expectArray) throws Exception {
 
@@ -338,7 +338,7 @@ public class FieldResolutionTests {
         return builder.build();
     }
 
-    static Stream<Arguments> aggregateElementsArguments() {
+    static Stream<Arguments> aggregateElementsArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1
@@ -359,7 +359,7 @@ public class FieldResolutionTests {
         return builder.build();
     }
 
-    static Stream<Arguments> aggregateArraysAndCollectionsArguments() {
+    static Stream<Arguments> aggregateArraysAndCollectionsArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1
@@ -371,7 +371,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource({ "aggregateElementsArguments", "commonDataAggregation" })
+    @MethodSource({ "aggregateElementsArgs", "commonDataAggregation" })
     public void aggregateElements(final Object[] param, final Object[] expected) throws Exception {
         final Method aggElements = FieldResolution.class.getDeclaredMethod("aggregateElements", Object[].class);
         aggElements.setAccessible(true);
@@ -381,7 +381,7 @@ public class FieldResolutionTests {
     }
 
     @ParameterizedTest
-    @MethodSource({ "aggregateArraysAndCollectionsArguments", "commonDataAggregation" })
+    @MethodSource({ "aggregateArraysAndCollectionsArgs", "commonDataAggregation" })
     public void aggregateArraysAndCollections(final Object[] param, final Object[] expected) throws Exception {
         final Method aggArray = FieldResolution.class.getDeclaredMethod("aggregateArrays", Object[].class);
         aggArray.setAccessible(true);
@@ -395,20 +395,20 @@ public class FieldResolutionTests {
 
         // Pass arrays to collections
         final Object[] param2 = Arrays.stream(param)
-                .map(o -> o != null ? Arrays.asList((Object[]) o) : o)
+                .map(o -> o != null ? Arrays.asList((Object[]) o) : null)
                 .toArray(size -> new Object[size]);
 
         result = (Object[]) aggCollection.invoke(null, new Object[] { param2 });
         assertArrayEquals(expected, result);
     }
 
-    static Stream<Arguments> transformToGetArguments() {
+    static Stream<Arguments> transformToGetArgs() {
         return Stream.of(Arguments.of("uuid", "getUuid"), Arguments.of("product", "getProduct"),
                 Arguments.of("animal", "getAnimal"), Arguments.of("farm", "getFarm"));
     }
 
     @ParameterizedTest
-    @MethodSource("transformToGetArguments")
+    @MethodSource("transformToGetArgs")
     public void transformToGet(final String param, final String expected) throws Exception {
         final Method m = FieldResolution.class.getDeclaredMethod("transformToGet", String.class);
         m.setAccessible(true);

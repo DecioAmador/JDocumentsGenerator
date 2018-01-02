@@ -81,7 +81,7 @@ public class TableGenerator implements AutoCloseable {
      *            An array that each element is an EL path for a field
      * @param translator
      *            Gives the user an opportunity to change the value of a field by
-     *            another (internationalization, format currency, format dates)
+     *            another (internationalisation, format currency, format dates)
      */
     public void generateTable(final Sheet sheet, final TableOptions options, final Collection<?> objs,
             final String[] titles, final String[] fields, final Translator translator) {
@@ -128,7 +128,7 @@ public class TableGenerator implements AutoCloseable {
                     if (o != null) {
                         translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 
-                        if (translated != null) {
+                        if (translated != null && !translated.isEmpty()) {
                             cell.setCellValue(translated);
                         }
                     }
@@ -159,7 +159,7 @@ public class TableGenerator implements AutoCloseable {
      * @param options
      *            Options to generate this table ({@link TableOptions})
      * @param fieldStyle
-     *            style being used on fields
+     *            Style being used on fields
      * @return Style for the first line in the fields
      */
     private CellStyle prevailTitlesStyle(final TableOptions options) {

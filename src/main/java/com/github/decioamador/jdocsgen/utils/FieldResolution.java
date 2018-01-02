@@ -15,7 +15,8 @@ public final class FieldResolution {
     private static final String DOT = "\\.";
 
     private FieldResolution() {
-        // It isn't supposed to create an instance of this class
+        throw new UnsupportedOperationException(
+                "It isn't supposed to create an instance of this class. This is an utility class");
     }
 
     /**
@@ -24,7 +25,7 @@ public final class FieldResolution {
      * @param obj
      *            Object being used
      * @param field
-     *            field path like EL
+     *            Field path
      * @return The object resolved
      */
     public static Object resolveField(final Object obj, final String field) {
@@ -62,7 +63,7 @@ public final class FieldResolution {
      * @param obj
      *            Object root
      * @param field
-     *            field path
+     *            Field path
      * @return The object resolved that can be an array in case it encountered a
      *         collection or an array or the object itself
      */
@@ -93,6 +94,7 @@ public final class FieldResolution {
                     } else {
                         temp = c.iterator().next().getClass();
                     }
+
                 } else if (o.getClass().isArray()) {
                     arrayObj = (Object[]) o;
                     if (arrayObj.length == 0) {
@@ -100,6 +102,7 @@ public final class FieldResolution {
                     } else {
                         temp = arrayObj[0].getClass();
                     }
+
                 } else {
                     temp = o.getClass();
                 }
@@ -114,10 +117,10 @@ public final class FieldResolution {
      * collections or arrays
      *
      * @param obj
-     *            object to which you should invoke
+     *            Object to which you should invoke
      * @param m
-     *            method being invoked
-     * @return object resolved
+     *            Method being invoked
+     * @return Object resolved
      */
     private static Object resolveMethodAggregation(final Object obj, final Method m) {
         Collection<?> c;
@@ -136,6 +139,7 @@ public final class FieldResolution {
                     }
                 }
                 o = aggregateElements(objs);
+
             } else if (o.getClass().isArray()) {
                 arrayObj = (Object[]) o;
                 objs = new Object[arrayObj.length];
@@ -144,6 +148,7 @@ public final class FieldResolution {
                         objs[i++] = m.invoke(aux);
                     }
                 }
+
                 o = aggregateElements(objs);
             } else {
                 o = m.invoke(o);
@@ -158,9 +163,9 @@ public final class FieldResolution {
      * Aggregates elements in case they are lists or arrays
      *
      * @param o
-     *            array of objects that can contain arrays or collections in each
+     *            Array of objects that can contain arrays or collections in each
      *            element
-     * @return an array with all the elements aggregated. It returns an untouched
+     * @return An array with all the elements aggregated. It returns an untouched
      *         array in case the parameter is null, empty or the first element is
      *         null
      */
@@ -183,9 +188,8 @@ public final class FieldResolution {
      * [a,b,c,z,x,y]<br>
      *
      * @param o
-     *            object array that each element is an array
-     * @return a collection of all the elements aggregated
-     * @required o must not be null
+     *            Object array that each element is an array
+     * @return A collection of all the elements aggregated
      */
     private static Object[] aggregateArrays(final Object[] o) {
         Object[] innerArray;

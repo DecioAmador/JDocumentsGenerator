@@ -25,7 +25,7 @@ public class TableOptions {
      * <b>Meaning:</b> The initial row of the table. E.g: 1 - second row <br>
      * <b>Default:</b> {@literal 0} - first row
      *
-     * @return the position of the first row
+     * @return The position of the first row
      */
     public int getInitPosRow() {
         return initPosRow;
@@ -36,7 +36,7 @@ public class TableOptions {
      * <b>Default:</b> {@literal 0} - first row
      *
      * @param initPosRow
-     *            the position of the first row
+     *            The position of the first row
      */
     public void setInitPosRow(final int initPosRow) {
         this.initPosRow = initPosRow;
@@ -46,7 +46,7 @@ public class TableOptions {
      * <b>Meaning:</b> The initial column of the table. E.g: 2 - third column <br>
      * <b>Default:</b> {@literal 0} - first column
      *
-     * @return the position of the first column
+     * @return The position of the first column
      */
     public int getInitPosCol() {
         return initPosCol;
@@ -57,7 +57,7 @@ public class TableOptions {
      * <b>Default:</b> {@literal 0} - first column
      *
      * @param initPosCol
-     *            the position of the first column
+     *            The position of the first column
      */
     public void setInitPosCol(final int initPosCol) {
         this.initPosCol = initPosCol;
@@ -92,7 +92,7 @@ public class TableOptions {
      * <b>Meaning:</b> Cell style applied to titles <br>
      * <b>Default:</b> {@literal null}
      *
-     * @return the cell style used on titles
+     * @return The cell style used on titles
      */
     public CellStyle getTitlesStyle() {
         return titlesStyle;
@@ -103,7 +103,7 @@ public class TableOptions {
      * <b>Default:</b> {@literal null}
      *
      * @param titlesStyle
-     *            the cell style used on titles
+     *            The cell style used on titles
      */
     public void setTitlesStyle(final CellStyle titlesStyle) {
         this.titlesStyle = titlesStyle;
@@ -113,7 +113,7 @@ public class TableOptions {
      * <b>Meaning:</b> Cell style applied to fields <br>
      * <b>Default:</b> {@literal null}
      *
-     * @return the cell style being used on fields
+     * @return The cell style being used on fields
      */
     public CellStyle getFieldsStyle() {
         return fieldsStyle;
@@ -124,7 +124,7 @@ public class TableOptions {
      * <b>Default:</b> {@literal null}
      *
      * @param fieldsStyle
-     *            the cell style being used on fields
+     *            The cell style being used on fields
      */
     public void setFieldsStyle(final CellStyle fieldsStyle) {
         this.fieldsStyle = fieldsStyle;
@@ -136,7 +136,7 @@ public class TableOptions {
      * <b>Default:</b> {@literal false}
      *
      * @param aggregate
-     *            set to true if you want to aggregate the values when finds a
+     *            Set to true if you want to aggregate the values when finds a
      *            {@linkplain Collection} or an array or set to false if you don't
      *            that need
      */

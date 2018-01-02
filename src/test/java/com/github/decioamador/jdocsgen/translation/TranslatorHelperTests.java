@@ -27,11 +27,11 @@ import com.github.decioamador.jdocsgen.model.DataProduct;
 
 public class TranslatorHelperTests {
 
-    static Stream<Arguments> getValueArrayArguments() {
-        Stream<Arguments> prevArgs = Stream.concat(getTranslatorCollectionValueArguments(), handleFormatArguments());
-        prevArgs = Stream.concat(prevArgs, handleDateTimeFormatArguments());
-        prevArgs = Stream.concat(prevArgs, handleResourceBundleArguments());
-        prevArgs = Stream.concat(prevArgs, handleMapArgumentsWithField());
+    static Stream<Arguments> getValueArrayArgs() {
+        Stream<Arguments> prevArgs = Stream.concat(getTranslatorCollectionValueArgs(), handleFormatArgs());
+        prevArgs = Stream.concat(prevArgs, handleDateTimeFormatArgs());
+        prevArgs = Stream.concat(prevArgs, handleResourceBundleArgs());
+        prevArgs = Stream.concat(prevArgs, handleMapArgsWithField());
 
         final Builder<Arguments> builder = Stream.builder();
         prevArgs.forEach((final Arguments args) -> {
@@ -42,10 +42,10 @@ public class TranslatorHelperTests {
         final TranslatorHelper transHelper = new TranslatorHelper(new TranslatorCollection());
 
         // Arg1 - nulls
-        builder.add(Arguments.of(null, transHelper, null, null, null));
+        builder.add(Arguments.of(null, transHelper, null, null, ""));
 
         // Arg2 - empty
-        builder.add(Arguments.of(null, transHelper, new Object[0], null, null));
+        builder.add(Arguments.of(null, transHelper, new Object[0], null, ""));
 
         // Arg3
         final String field = "arg3";
@@ -81,7 +81,7 @@ public class TranslatorHelperTests {
     }
 
     @ParameterizedTest
-    @MethodSource("getValueArrayArguments")
+    @MethodSource("getValueArrayArgs")
     public void getValueArray(final String field, final TranslatorHelper transHelper, final Object[] obj,
             final String separator, final String expected) throws Exception {
 
@@ -89,20 +89,20 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> getValueArguments() {
+    static Stream<Arguments> getValueArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TranslatorHelper transHelper = new TranslatorHelper(new TranslatorCollection());
-        builder.add(Arguments.of(null, transHelper, null, null));
-        builder.add(Arguments.of(null, transHelper, UUID.randomUUID().toString(), null));
-        builder.add(Arguments.of(UUID.randomUUID().toString(), transHelper, UUID.randomUUID().toString(), null));
+        builder.add(Arguments.of(null, transHelper, null, ""));
+        builder.add(Arguments.of(null, transHelper, UUID.randomUUID().toString(), ""));
+        builder.add(Arguments.of(UUID.randomUUID().toString(), transHelper, UUID.randomUUID().toString(), ""));
 
         return builder.build();
     }
 
     @ParameterizedTest
-    @MethodSource({ "getValueArguments", "getTranslatorCollectionValueArguments", "handleFormatArguments",
-        "handleDateTimeFormatArguments", "handleResourceBundleArguments", "handleMapArgumentsWithField" })
+    @MethodSource({ "getValueArgs", "getTranslatorCollectionValueArgs", "handleFormatArgs", "handleDateTimeFormatArgs",
+        "handleResourceBundleArgs", "handleMapArgsWithField" })
     public void getValue(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -110,7 +110,7 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> getTranslatorCollectionValueArguments() {
+    static Stream<Arguments> getTranslatorCollectionValueArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Arg1 - Empty collections
@@ -121,7 +121,7 @@ public class TranslatorHelperTests {
         trans.setFieldsToMap(Collections.emptySet());
         trans.setRawPrint(Collections.emptySet());
         builder.add(Arguments.of(UUID.randomUUID().toString(), new TranslatorHelper(trans),
-                UUID.randomUUID().toString(), null));
+                UUID.randomUUID().toString(), ""));
 
         // Arg2 - Raw Print
         final TranslatorCollection trans2 = new TranslatorCollection();
@@ -133,20 +133,20 @@ public class TranslatorHelperTests {
 
         // Arg3 - Empty Translator Collection
         final TranslatorCollection trans3 = new TranslatorCollection();
-        builder.add(Arguments.of(null, new TranslatorHelper(trans3), null, null));
+        builder.add(Arguments.of(null, new TranslatorHelper(trans3), null, ""));
 
         // Arg4 - Doesn't contain map key
         final TranslatorCollection trans4 = new TranslatorCollection();
         trans4.setFieldsToMap(Collections.emptySet());
         trans4.setMap(Collections.emptyMap());
-        builder.add(Arguments.of(UUID.randomUUID().toString(), new TranslatorHelper(trans4), null, null));
+        builder.add(Arguments.of(UUID.randomUUID().toString(), new TranslatorHelper(trans4), null, ""));
 
         return builder.build();
     }
 
     @ParameterizedTest
-    @MethodSource({ "getTranslatorCollectionValueArguments", "handleFormatArguments", "handleDateTimeFormatArguments",
-    "handleResourceBundleArguments" })
+    @MethodSource({ "getTranslatorCollectionValueArgs", "handleFormatArgs", "handleDateTimeFormatArgs",
+    "handleResourceBundleArgs" })
     public void getTranslatorCollectionValue(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -154,9 +154,9 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> handleMapArgumentsWithField() {
+    static Stream<Arguments> handleMapArgsWithField() {
         final Builder<Arguments> builder = Stream.builder();
-        handleMapArguments().forEach((final Arguments arg) -> {
+        handleMapArgs().forEach((final Arguments arg) -> {
             final Object[] argsArray = arg.get();
 
             final TranslatorHelper transHelper = (TranslatorHelper) argsArray[0];
@@ -170,7 +170,7 @@ public class TranslatorHelperTests {
         return builder.build();
     }
 
-    static Stream<Arguments> handleMapArguments() {
+    static Stream<Arguments> handleMapArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TranslatorCollection translator = new TranslatorCollection();
@@ -187,7 +187,7 @@ public class TranslatorHelperTests {
     }
 
     @ParameterizedTest
-    @MethodSource("handleMapArguments")
+    @MethodSource("handleMapArgs")
     public void handleMap(final TranslatorHelper transHelper, final Object obj, final String expected)
             throws Exception {
 
@@ -195,7 +195,7 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> handleDateTimeFormatArguments() {
+    static Stream<Arguments> handleDateTimeFormatArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TranslatorCollection translator = new TranslatorCollection();
@@ -211,7 +211,7 @@ public class TranslatorHelperTests {
     }
 
     @ParameterizedTest
-    @MethodSource("handleDateTimeFormatArguments")
+    @MethodSource("handleDateTimeFormatArgs")
     public void handleDateTimeFormat(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -219,7 +219,7 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> handleResourceBundleArguments() {
+    static Stream<Arguments> handleResourceBundleArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TranslatorCollection translator = new TranslatorCollection();
@@ -232,7 +232,7 @@ public class TranslatorHelperTests {
     }
 
     @ParameterizedTest
-    @MethodSource("handleResourceBundleArguments")
+    @MethodSource("handleResourceBundleArgs")
     public void handleResourceBundle(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 
@@ -240,7 +240,7 @@ public class TranslatorHelperTests {
         assertEquals(expected, result);
     }
 
-    static Stream<Arguments> handleFormatArguments() {
+    static Stream<Arguments> handleFormatArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TranslatorCollection translator = new TranslatorCollection();
@@ -273,7 +273,7 @@ public class TranslatorHelperTests {
     }
 
     @ParameterizedTest
-    @MethodSource("handleFormatArguments")
+    @MethodSource("handleFormatArgs")
     public void handleFormat(final String field, final TranslatorHelper transHelper, final Object obj,
             final String expected) throws Exception {
 

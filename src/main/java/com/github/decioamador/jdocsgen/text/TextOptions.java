@@ -49,7 +49,7 @@ public class TextOptions {
      * <b>Default:</b> {@literal false}
      *
      * @param aggregate
-     *            set to true if you want to aggregate the values when finds a
+     *            Set to true if you want to aggregate the values when finds a
      *            {@linkplain Collection} or an array or set to false if you don't
      *            that need
      */

@@ -25,7 +25,7 @@ public interface Translator {
      * @param field
      *            A string that represents a field
      * @param sep
-     *            the string that will separate each on of the objects
+     *            The string that will separate each on of the objects
      * @return Returns the representation of a group of objects
      */
     String getValue(final Object[] objs, final String field, final String sep);

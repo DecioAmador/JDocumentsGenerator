@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -68,7 +67,7 @@ public class TableGeneratorTests {
         return builder.build();
     }
 
-    static Stream<Arguments> generateTableArguments() {
+    static Stream<Arguments> generateTableArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         getWorkbooks().forEach((final Workbook wb) -> {
@@ -97,7 +96,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateTableArguments")
+    @MethodSource("generateTableArgs")
     public void generateTableNoAgg(final Workbook wb, final TableGenerator tg, final String sheetName,
             final TableOptions options, final Collection<?> objs, final String[] titles, final String[] fields,
             final Translator translator, final int[][] cellsToExclude) throws Exception {
@@ -131,7 +130,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateTableArguments")
+    @MethodSource("generateTableArgs")
     public void generateTableStyleAndAgg(final Workbook wb, final TableGenerator tg, final String sheetName,
             final TableOptions options, final Collection<?> objs, final String[] titles, final String[] fields,
             final Translator translator, final int[][] cellsToExclude) throws Exception {
@@ -199,7 +198,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateTableArguments")
+    @MethodSource("generateTableArgs")
     public void generateTableStyleFields(final Workbook wb, final TableGenerator tg, final String sheetName,
             final TableOptions options, final Collection<?> objs, final String[] titles, final String[] fields,
             final Translator translator, final int[][] cellsToExclude) throws Exception {
@@ -290,7 +289,7 @@ public class TableGeneratorTests {
         }
     }
 
-    static Stream<Arguments> prevailTitlesStyleArguments() {
+    static Stream<Arguments> prevailTitlesStyleArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         getWorkbooks().forEach((final Workbook wb) -> {
@@ -325,7 +324,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("prevailTitlesStyleArguments")
+    @MethodSource("prevailTitlesStyleArgs")
     public void prevailBottomBorderTitles(final TableGenerator tg, final TableOptions options) throws Exception {
 
         try {
@@ -342,7 +341,7 @@ public class TableGeneratorTests {
         }
     }
 
-    static Stream<Arguments> generateTitlesArguments() {
+    static Stream<Arguments> generateTitlesArgs() {
         final Builder<Arguments> builder = Stream.builder();
         final String[] titles = new String[] { "Kingdom", "Specie", "Weight", "Transport" };
 
@@ -388,7 +387,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateTitlesArguments")
+    @MethodSource("generateTitlesArgs")
     public void generateTitles(final TableGenerator tg, final Row row, final TableOptions options,
             final String[] titles) throws Exception {
         try {
@@ -418,7 +417,7 @@ public class TableGeneratorTests {
         }
     }
 
-    static Stream<Arguments> autoSizeColumnsArguments() {
+    static Stream<Arguments> autoSizeColumnsArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         // Columns with width lesser than default
@@ -483,7 +482,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("autoSizeColumnsArguments")
+    @MethodSource("autoSizeColumnsArgs")
     public void autoSizeColumns(final TableGenerator tg, final Sheet sheet, final TableOptions options,
             final int titlesSize, final boolean lesser) throws Exception {
 
@@ -554,7 +553,7 @@ public class TableGeneratorTests {
         return widths;
     }
 
-    static Stream<Arguments> writeArguments() {
+    static Stream<Arguments> writeArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         getWorkbooks().forEach((final Workbook wb) -> {
@@ -578,7 +577,7 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("writeArguments")
+    @MethodSource("writeArgs")
     public void writeInputStream(final TableGenerator tg) throws Exception {
         InputStream bais = null;
         assertNotNull(tg.getWorkbook());
@@ -592,22 +591,17 @@ public class TableGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("writeArguments")
+    @MethodSource("writeArgs")
     public void writeOutputStream(final TableGenerator tg) throws Exception {
-        OutputStream os = null;
         assertNotNull(tg.getWorkbook());
         final Path p = Paths
-                .get(String.format(".%cwriteTest%s.xlsx", File.separatorChar, UUID.randomUUID().toString()));
-        try {
-            os = Files.newOutputStream(p);
+                .get(String.format("writeTest%s.xlsx", UUID.randomUUID().toString()));
+        try (OutputStream os = Files.newOutputStream(p)) {
             assertNotNull(tg.getWorkbook());
             assertTrue(Files.size(p) == 0L);
             tg.write(os);
             assertTrue(Files.size(p) > 50L);
         } finally {
-            if (os != null) {
-                os.close();
-            }
             Files.delete(p);
             tg.close();
 

@@ -4,11 +4,13 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Helper class to translate fields
@@ -24,37 +26,30 @@ public class TranslatorHelper implements Translator {
     /**
      * {@inheritDoc}
      *
-     * @return the representation of the value or null in case it doesn't have any
+     * @return The representation of the value or null in case it doesn't have any
      */
     @Override
     public String getValue(final Object[] objs, final String field, final String sep) {
-        String result = null;
-        String value;
+        String result = "";
 
         if (objs != null && objs.length != 0) {
-            final StringJoiner sj = new StringJoiner(sep);
-            for (int i = 0; i < objs.length; i++) {
-                value = getValue(objs[i], field);
-                if (value != null) {
-                    sj.add(value);
-                }
-            }
+            final Stream<Object> stream = Arrays.stream(objs);
 
-            if (sj.length() != 0) {
-                result = sj.toString();
-            }
+            result = stream.map(o -> getValue(o, field)).filter(str -> str != null && !str.isEmpty()).distinct()
+                    .collect(Collectors.joining(sep));
         }
+
         return result;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @return the representation of the value or null in case it doesn't have any
+     * @return The representation of the value or null in case it doesn't have any
      */
     @Override
     public String getValue(final Object obj, final String field) {
-        String result = null;
+        String result = "";
 
         if (obj != null && field != null) {
             result = getTranslatorCollectionValue(obj, field);
@@ -70,10 +65,10 @@ public class TranslatorHelper implements Translator {
      *            Object to process
      * @param field
      *            Field that is used as an id
-     * @return the representation of the object
+     * @return The representation of the object
      */
     protected String getTranslatorCollectionValue(final Object obj, final String field) {
-        String result = null;
+        String result = "";
 
         if (translatorCollection.getRawPrint() != null && translatorCollection.getRawPrint().contains(field)) {
             result = obj.toString();
@@ -117,8 +112,8 @@ public class TranslatorHelper implements Translator {
      * @param obj
      *            Object that must be also a {@link TemporalAccessor}
      * @param field
-     *            field like an EL path being used to resolve an object
-     * @return the representation of the object
+     *            Field like an EL path being used to resolve an object
+     * @return The representation of the object
      */
     protected String handleDateTimeFormat(final Object obj, final String field) {
         final DateTimeFormatter dateTimeFormatter = translatorCollection.getDatesToFormat().get(field);
@@ -143,10 +138,10 @@ public class TranslatorHelper implements Translator {
      * Transform an object into a formated string using a {@link Format}
      *
      * @param field
-     *            field like an EL path being used to resolve an object
+     *            Field like an EL path being used to resolve an object
      * @param obj
      *            Object that shouldn't be null
-     * @return the representation of the object
+     * @return The representation of the object
      */
     protected String handleFormat(final Object obj, final String field) {
         String result;
@@ -170,7 +165,7 @@ public class TranslatorHelper implements Translator {
      * TranslatorCollection that is wrapped in this instance of the
      * {@link TranslatorHelper}
      *
-     * @return translator collection being used
+     * @return Translator collection being used
      */
     public TranslatorCollection getTranslatorCollection() {
         return translatorCollection;

@@ -48,7 +48,7 @@ public class TextGenerator implements AutoCloseable {
      * @param options
      *            Options to generate this text
      * @param labels
-     *            TAn array that each element is the label for a line
+     *            An array that each element is the label for a line
      * @param fields
      *            An array that each element is an EL path for a field
      * @param translator
@@ -92,7 +92,7 @@ public class TextGenerator implements AutoCloseable {
                 if (o != null) {
                     translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 
-                    if (translated != null) {
+                    if (translated != null && !translated.isEmpty()) {
                         run = paragraph.createRun();
                         run.setText(translated);
                     }
@@ -164,7 +164,7 @@ public class TextGenerator implements AutoCloseable {
                     if (o != null) {
                         translated = TranslatorUtils.translateObject(agg, sep, translator, o, field);
 
-                        if (translated != null) {
+                        if (translated != null && !translated.isEmpty()) {
                             cell.setText(translated);
                         }
                     }
@@ -177,7 +177,7 @@ public class TextGenerator implements AutoCloseable {
 
     /**
      * Counts non nulls objects
-     * 
+     *
      * @param objs
      *            Collection of objects
      * @return number of non null objects

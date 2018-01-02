@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,15 +46,17 @@ public class TextGeneratorTests {
         return builder.build();
     }
 
-    static Stream<Arguments> generateParagraphArguments() {
+    static Stream<Arguments> generateParagraphArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final String[] fields = new String[] { "kingdom", "specie", "weight", "birthdate", "transport" };
         final String[] labels = new String[] { "Kingdom", "Specie", "Weight", "Birthdate", "Transport" };
+
         final TextOptions options = new TextOptions();
         options.setBetweenLabelAndField(" - ");
         options.setAggregate(true);
         options.setSeperatorAgg("; ");
+
         final TranslatorCollection collection = new TranslatorCollection();
         collection.setRawPrint(new HashSet<>());
         Collections.addAll(collection.getRawPrint(), fields);
@@ -78,7 +79,7 @@ public class TextGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateParagraphArguments")
+    @MethodSource("generateParagraphArgs")
     public void generateParagraph(final XWPFDocument doc, final Object obj, final TextOptions options,
             final String[] labels, final String[] fields, final Translator translator) throws IOException {
 
@@ -93,7 +94,7 @@ public class TextGeneratorTests {
         }
     }
 
-    static Stream<Arguments> generateTableArguments() {
+    static Stream<Arguments> generateTableArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final String[] fields = new String[] { "kingdom", "specie", "weight", "birthdate", "transport" };
@@ -123,7 +124,7 @@ public class TextGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("generateTableArguments")
+    @MethodSource("generateTableArgs")
     public void generateTable(final XWPFDocument doc, final Collection<?> objs, final TextOptions options,
             final String[] labels, final String[] fields, final Translator translator) throws IOException {
 
@@ -156,7 +157,7 @@ public class TextGeneratorTests {
         }
     }
 
-    static Stream<Arguments> writeArguments() {
+    static Stream<Arguments> writeArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         getDocuments().forEach((final XWPFDocument doc) -> {
@@ -180,7 +181,7 @@ public class TextGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("writeArguments")
+    @MethodSource("writeArgs")
     public void writeInputStream(final TextGenerator tg) throws Exception {
         InputStream bais = null;
         assertNotNull(tg.getDocument());
@@ -196,25 +197,20 @@ public class TextGeneratorTests {
     }
 
     @ParameterizedTest
-    @MethodSource("writeArguments")
+    @MethodSource("writeArgs")
     public void writeOutputStream(final TextGenerator tg) throws Exception {
-        OutputStream os = null;
         final Path p = Paths
-                .get(String.format(".%cwriteTest%s.xlsx", File.separatorChar, UUID.randomUUID().toString()));
+                .get(String.format("writeTest%s.xlsx", UUID.randomUUID().toString()));
         assertNotNull(tg.getDocument());
-        try {
-            os = Files.newOutputStream(p);
+
+        try (OutputStream os = Files.newOutputStream(p)) {
             assertNotNull(tg.getDocument());
             assertTrue(Files.size(p) == 0L);
             tg.write(os);
             assertTrue(Files.size(p) > 50L);
         } finally {
-            if (os != null) {
-                os.close();
-            }
             Files.delete(p);
             tg.close();
-
         }
     }
 }

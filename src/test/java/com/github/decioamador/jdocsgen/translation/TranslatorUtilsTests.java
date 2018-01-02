@@ -20,7 +20,7 @@ import com.github.decioamador.jdocsgen.table.TableGenerator;
 
 public class TranslatorUtilsTests {
 
-    static Stream<Arguments> translateObjectArguments() {
+    static Stream<Arguments> translateObjectArgs() {
         final Builder<Arguments> builder = Stream.builder();
 
         final TableGenerator tg = new TableGenerator(new XSSFWorkbook());
@@ -32,7 +32,7 @@ public class TranslatorUtilsTests {
         final Translator translator = new TranslatorHelper(transCol);
 
         // Arg1 - Collection
-        final List<Object> objs1 = Arrays.stream(DataAnimal.getPets1()).map(p -> p != null ? p.getName() : p)
+        final List<Object> objs1 = Arrays.stream(DataAnimal.getPets1()).map(p -> p != null ? p.getName() : null)
                 .collect(Collectors.toList());
 
         final String expected1 = "Buddy; Duke; Tigger";
@@ -54,7 +54,7 @@ public class TranslatorUtilsTests {
     }
 
     @ParameterizedTest
-    @MethodSource("translateObjectArguments")
+    @MethodSource("translateObjectArgs")
     public void translateObject(final TableGenerator tg, final boolean agg, final String sep,
             final Translator translator, final Object o, final String field, final String expected)
                     throws Exception {
