@@ -15,7 +15,7 @@ public class TableOptions {
     private boolean autoSize = false;
     private boolean prevailTitlesStyle = true;
 
-    private boolean aggregate = false;
+    private boolean aggregate = true;
     private String seperatorAgg = ", ";
 
     private CellStyle titlesStyle;
@@ -133,7 +133,7 @@ public class TableOptions {
     /**
      * <b>Meaning:</b> Aggregate values in case they pass through several
      * {@link Collection} or Arrays <br>
-     * <b>Default:</b> {@literal false}
+     * <b>Default:</b> {@literal true}
      *
      * @param aggregate
      *            Set to true if you want to aggregate the values when finds a
@@ -147,7 +147,7 @@ public class TableOptions {
     /**
      * <b>Meaning:</b> Aggregate values in case they pass through several
      * {@link Collection} or Arrays <br>
-     * <b>Default:</b> {@literal false}
+     * <b>Default:</b> {@literal true}
      *
      * @return Return true if you want to aggregate the values when finds a
      *         {@linkplain Collection} or an array or false otherwise

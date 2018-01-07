@@ -69,6 +69,7 @@ public class TextGeneratorTests {
         });
 
         final TextOptions options2 = new TextOptions();
+        options2.setAggregate(false);
         getDocuments().forEach((final XWPFDocument doc) -> {
             for (final Animal a : DataAnimal.getAnimals1()) {
                 builder.add(Arguments.of(doc, a, options2, labels, fields, translator));
@@ -171,6 +172,7 @@ public class TextGeneratorTests {
             Collections.addAll(transCol.getRawPrint(), fields);
             final Translator translator = new TranslatorHelper(transCol);
             final TextOptions options = new TextOptions();
+            options.setAggregate(false);
 
             tg.generateTable(objs, options, titles, fields, translator);
 

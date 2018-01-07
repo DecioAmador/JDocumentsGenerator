@@ -23,7 +23,11 @@ One of the best ways to see how it works is to look at the demonstrations below.
 
 ### Versions:
 
-#### 2.1.0 
+#### 2.1.1
+ - Aggregate is true by default
+ - TranslatorHelper now uses distinct
+
+#### 2.1.0
  - Support of collections and arrays in the field resolution (doesn't support primitive arrays)
 
 #### 2.0.0
